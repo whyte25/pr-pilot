@@ -12,6 +12,9 @@ PR Pilot automates the tedious parts of creating pull requests. It detects your 
 - **GitHub CLI auto-install** - One-click installation
 - **Conventional commits** - Optional support with auto-suggestions
 - **Pre-commit hooks** - Runs lint/format automatically
+- **PR-only mode** - Create PRs from existing commits without new changes
+- **Multiple change types** - Select multiple types per PR (bugfix, feature, docs, etc.)
+- **Flexible base branch** - Choose which branch to create PR against (main, dev, custom)
 - **Beginner friendly** - Simple mode asks just one question
 - **Powerful** - Full customization for advanced users
 
@@ -105,6 +108,35 @@ Done!
 pr-pilot --conventional
 ```
 
+### Multiple Change Types
+
+All modes now support selecting multiple change types for your PR:
+
+```bash
+? Type of change (select all that apply):
+❯ ◉ Bug fix
+  ◉ New feature
+  ◯ Breaking change
+  ◉ Documentation
+  ◉ Code refactoring
+  ◯ Performance improvement
+```
+
+**Use Space to select/deselect, Enter to confirm**
+
+The PR body will show checked boxes for selected types:
+
+```markdown
+## Type of Change
+
+- [x] Bug fix
+- [x] New feature
+- [ ] Breaking change
+- [x] Documentation
+- [x] Code refactoring
+- [ ] Performance improvement
+```
+
 ### CLI Options
 
 ```bash
@@ -119,6 +151,56 @@ Options:
   -h, --help        Show help
   -v, --version     Show version
 ```
+
+### PR-Only Mode
+
+Create a PR from existing commits without making new changes:
+
+```bash
+$ pr-pilot
+
+✈️  PR Pilot - Conventional Commits
+
+💡 No changes to commit. Working tree is clean.
+
+? Do you have committed changes you want to create a PR for? Yes
+
+✈️  PR Pilot - Create PR
+
+📍 Current branch: feat/new-feature
+
+? Which branch do you want to create a PR against?
+❯ main
+  dev
+  Other (specify branch name)
+
+Checking commits ahead of main...
+
+✅ 3 commit(s) ahead of main:
+  • feat: add user authentication
+  • fix: resolve token expiration
+  • docs: update API documentation
+
+? PR title: feat: add user authentication and fixes
+? PR description (optional): Implements OAuth2 authentication
+? Type of change (select all that apply):
+❯ ◉ Bug fix
+  ◉ New feature
+  ◯ Breaking change
+  ◉ Documentation
+
+✓ Pull request created!
+🎉 https://github.com/your-org/repo/pull/125
+
+Done!
+```
+
+**Key Features:**
+
+- Select base branch (main, master, develop, dev, or custom)
+- Shows all commits ahead of base branch
+- Choose multiple change types (bugfix, feature, docs, etc.)
+- Validates branch existence before proceeding
 
 ## Configuration
 

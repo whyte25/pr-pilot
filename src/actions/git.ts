@@ -101,7 +101,7 @@ export async function createBranch(cwd: string, branchName: string): Promise<voi
   try {
     await git.checkoutLocalBranch(branchName)
     spinner.succeed(`Created and switched to branch '${branchName}'`)
-  } catch (error: any) {
+  } catch (error: unknown) {
     spinner.fail('Failed to create branch')
     throw error
   }

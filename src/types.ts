@@ -32,6 +32,10 @@ export interface Config {
     format: boolean | string
     test: boolean | string
   }
+  git: {
+    promptForBranch: 'always' | 'protected' | 'never'
+    protectedBranches: string[]
+  }
   pr: {
     base: 'auto' | string
     draft: boolean

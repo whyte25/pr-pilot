@@ -50,6 +50,10 @@ async function generateDefaults(cwd: string): Promise<Partial<Config>> {
       maxLength: 100,
     },
     hooks,
+    git: {
+      promptForBranch: 'always',
+      protectedBranches: ['main', 'master', 'develop', 'dev'],
+    },
     pr: {
       base: 'auto',
       draft: false,
@@ -73,6 +77,10 @@ function mergeConfig(defaults: Partial<Config>, user: Partial<Config>): any {
     hooks: {
       ...defaults.hooks,
       ...user.hooks,
+    },
+    git: {
+      ...defaults.git,
+      ...user.git,
     },
     pr: {
       ...defaults.pr,

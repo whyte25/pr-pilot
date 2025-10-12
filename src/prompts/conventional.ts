@@ -25,7 +25,7 @@ export async function promptConventionalCommit(
 ): Promise<ConventionalCommitAnswers> {
   // Type selection
   const type = await select({
-    message: 'Type of change?',
+    message: 'Type of commit?',
     choices: COMMIT_TYPES,
     default: 'feat',
   })

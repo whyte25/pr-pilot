@@ -4,6 +4,7 @@ import { commitChanges, isWorkingTreeClean, promptForBranch, pushChanges } from 
 import { createPullRequest } from '../actions/pr.js'
 import { ensureGitHubCLI } from '../github/setup.js'
 import { promptSimpleCommit } from '../prompts/simple.js'
+import { promptChangeTypes, buildChangeTypeSection } from '../prompts/change-types.js'
 import { runPROnlyFlow } from './pr-only.js'
 import type { Config } from '../types.js'
 
@@ -49,8 +50,14 @@ export async function runSimpleFlow(cwd: string, config: Config): Promise<void> 
   // Push
   await pushChanges(cwd)
 
+  // Ask for type of changes for PR
+  const changeTypes = await promptChangeTypes()
+
+  // Build PR body with change types
+  const prBody = `## Description\n\n${answers.message}\n\n${buildChangeTypeSection(changeTypes)}`
+
   // Create PR
-  await createPullRequest(cwd, answers.message, answers.message, config)
+  await createPullRequest(cwd, answers.message, prBody, config)
 
   console.log(pc.green('✅ Done!\n'))
 }

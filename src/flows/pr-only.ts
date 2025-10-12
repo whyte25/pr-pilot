@@ -1,9 +1,10 @@
 import pc from 'picocolors'
-import { input, select, checkbox } from '@inquirer/prompts'
+import { input, select } from '@inquirer/prompts'
 import { simpleGit } from 'simple-git'
 import { createPullRequest } from '../actions/pr.js'
 import { ensureGitHubCLI } from '../github/setup.js'
 import { pushChanges, getCurrentBranch } from '../actions/git.js'
+import { promptChangeTypes, buildChangeTypeSection } from '../prompts/change-types.js'
 import type { Config } from '../types.js'
 
 /**
@@ -87,7 +88,11 @@ export async function runPROnlyFlow(cwd: string, config: Config): Promise<void> 
 
   // Check if there are commits ahead of base branch
   try {
-    const log = await git.log({ from: `origin/${baseBranch}`, to: currentBranch })
+    // Prefer remote branch if it exists, otherwise use local
+    const branchRef = branches.all.includes(`origin/${baseBranch}`)
+      ? `origin/${baseBranch}`
+      : baseBranch
+    const log = await git.log({ from: branchRef, to: currentBranch })
 
     if (log.all.length === 0) {
       console.log(pc.yellow(`💡 No commits ahead of ${baseBranch}.\n`))
@@ -131,17 +136,7 @@ export async function runPROnlyFlow(cwd: string, config: Config): Promise<void> 
     })
 
     // Ask for type of change
-    const changeTypes = await checkbox({
-      message: 'Type of change (select all that apply):',
-      choices: [
-        { name: 'Bug fix', value: 'bugfix' },
-        { name: 'New feature', value: 'feature' },
-        { name: 'Breaking change', value: 'breaking' },
-        { name: 'Documentation', value: 'docs' },
-        { name: 'Code refactoring', value: 'refactor' },
-        { name: 'Performance improvement', value: 'perf' },
-      ],
-    })
+    const changeTypes = await promptChangeTypes()
 
     // Build full PR body with commits and change types
     const fullBody = buildPRBody(
@@ -154,9 +149,16 @@ export async function runPROnlyFlow(cwd: string, config: Config): Promise<void> 
     await createPullRequest(cwd, prTitle, fullBody, config)
 
     console.log(pc.green('✅ Done!\n'))
-  } catch (error: any) {
-    console.log(pc.red(`\n❌ Error: ${error.message}\n`))
-    console.log(pc.dim('Make sure the base branch exists and is up to date.\n'))
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error)
+    console.log(pc.red(`\n❌ Error: ${message}\n`))
+
+    if (message.includes('unknown revision')) {
+      console.log(pc.dim(`💡 The branch '${baseBranch}' may not exist or is not up to date.\n`))
+      console.log(pc.dim('Try: git fetch origin\n'))
+    } else {
+      console.log(pc.dim('Make sure the base branch exists and is up to date.\n'))
+    }
   }
 }
 
@@ -170,22 +172,8 @@ function buildPRBody(description: string, commits: string[], changeTypes: string
   commits.forEach((msg) => {
     body += `- ${msg}\n`
   })
-  body += '\n## Type of Change\n\n'
-
-  // Mark selected change types with [x]
-  const typeMap: Record<string, string> = {
-    bugfix: 'Bug fix',
-    feature: 'New feature',
-    breaking: 'Breaking change',
-    docs: 'Documentation',
-    refactor: 'Code refactoring',
-    perf: 'Performance improvement',
-  }
-
-  Object.entries(typeMap).forEach(([key, label]) => {
-    const checked = changeTypes.includes(key) ? 'x' : ' '
-    body += `- [${checked}] ${label}\n`
-  })
+  body += '\n'
+  body += buildChangeTypeSection(changeTypes)
 
   return body
 }

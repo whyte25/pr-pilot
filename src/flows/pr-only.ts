@@ -84,6 +84,13 @@ export async function runPROnlyFlow(cwd: string, config: Config): Promise<void> 
     }
   }
 
+  // Check if trying to create PR to the same branch
+  if (currentBranch === baseBranch) {
+    console.log(pc.red(`\n❌ Cannot create PR: You're already on the '${baseBranch}' branch\n`))
+    console.log(pc.dim('Create a new branch first or switch to a different branch.\n'))
+    return
+  }
+
   console.log(pc.dim(`\nFetching latest changes from remote...\n`))
 
   // Fetch latest changes to ensure we have up-to-date refs
@@ -141,6 +148,7 @@ export async function runPROnlyFlow(cwd: string, config: Config): Promise<void> 
       default: defaultTitle,
       validate: (value) => {
         if (!value.trim()) return 'PR title cannot be empty'
+        if (value.length > 100) return `Title too long (${value.length}/100 characters)`
         return true
       },
     })

@@ -46,15 +46,46 @@ export type Config = z.infer<typeof configSchema>
  * @example
  * ```ts
  * // pr-pilot.config.ts
- * import { defineConfig } from '@scrollz/pr-pilot'
+ * import { defineConfig } from 'pr-pilot'
  *
  * export default defineConfig({
  *   commit: {
+ *     format: 'conventional', // or 'simple'
  *     scopes: ['web', 'api', 'docs']
+ *   },
+ *   git: {
+ *     promptForBranch: 'always', // or 'protected' or 'never'
+ *   },
+ *   pr: {
+ *     base: 'auto', // or 'main', 'dev', etc.
  *   }
  * })
  * ```
  */
-export function defineConfig(config: z.input<typeof configSchema>): Config {
+export function defineConfig(
+  config: Partial<{
+    commit: {
+      format?: 'conventional' | 'simple'
+      scopes?: 'auto' | string[] | false
+      maxLength?: number
+    }
+    hooks: {
+      lint?: boolean | string
+      format?: boolean | string
+      test?: boolean | string
+    }
+    git: {
+      promptForBranch?: 'always' | 'protected' | 'never'
+      protectedBranches?: string[]
+    }
+    pr: {
+      base?: 'auto' | 'main' | 'master' | 'develop' | 'dev' | string
+      draft?: boolean
+      labels?: string[]
+      reviewers?: string[]
+      template?: boolean
+    }
+  }>
+): Config {
   return configSchema.parse(config)
 }

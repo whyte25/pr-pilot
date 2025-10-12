@@ -12,7 +12,8 @@ export async function createPullRequest(
   cwd: string,
   title: string,
   body: string,
-  config: Config
+  config: Config,
+  baseBranch?: string
 ): Promise<void> {
   // Quick check if gh is available (already checked earlier, but verify)
   const ready = await ensureGitHubCLI()
@@ -27,6 +28,11 @@ export async function createPullRequest(
 
   try {
     const args = ['pr', 'create', '--title', title, '--body', body]
+
+    // Add base branch if specified
+    if (baseBranch) {
+      args.push('--base', baseBranch)
+    }
 
     // Add optional flags
     if (config.pr.draft) {

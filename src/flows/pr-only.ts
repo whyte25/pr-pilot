@@ -86,7 +86,7 @@ export async function runPROnlyFlow(cwd: string, config: Config): Promise<void> 
 
   console.log(pc.dim(`\nChecking commits ahead of ${baseBranch}...\n`))
 
-  // Check if there are commits ahead of base branch
+  // Check if there are commits ahead of base branch FIRST
   try {
     // Prefer remote branch if it exists, otherwise use local
     const branchRef = branches.all.includes(`origin/${baseBranch}`)
@@ -145,8 +145,8 @@ export async function runPROnlyFlow(cwd: string, config: Config): Promise<void> 
       changeTypes
     )
 
-    // Create PR
-    await createPullRequest(cwd, prTitle, fullBody, config)
+    // Create PR with the selected base branch
+    await createPullRequest(cwd, prTitle, fullBody, config, baseBranch)
 
     console.log(pc.green('✅ Done!\n'))
   } catch (error: unknown) {

@@ -1,4 +1,4 @@
-# 🚀 PR Pilot - Quick Start Guide
+# PR Pilot - Quick Start Guide
 
 ## Test It Right Now (3 Steps)
 
@@ -20,13 +20,13 @@ node dist/cli.js --simple
 ### 3. Follow the Prompt
 
 ```
-✈️  PR Pilot - Simple Mode
+PR Pilot - Simple Mode
 
-📝 What did you change? Testing PR Pilot
+What did you change? Testing PR Pilot
 ✓ Committing changes...
 ✓ Pushing to remote...
 ✓ Creating pull request...
-✅ Done!
+Done!
 ```
 
 ---
@@ -168,12 +168,12 @@ You need Node.js >= 18. Install from [nodejs.org](https://nodejs.org)
 
 ## Next Steps
 
-1. ✅ Test it with real changes
-2. ✅ Try both simple and conventional modes
-3. ✅ Create a config file (optional)
-4. ✅ Add to your workflow
-5. ✅ Share with your team!
+1. Test it with real changes
+2. Try both simple and conventional modes
+3. Create a config file (optional)
+4. Add to your workflow
+5. Share with your team!
 
 ---
 
-**That's it! You're ready to use PR Pilot!** ✈️
+**That's it! You're ready to use PR Pilot!**

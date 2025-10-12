@@ -1,26 +1,25 @@
 # ✈️ PR Pilot
 
 > Your PR autopilot - create pull requests with ease
-> PR Pilot automates the tedious parts of creating pull requests. It detects your project setup, guides you through commits, and creates PRs automatically.
+
+PR Pilot automates the tedious parts of creating pull requests. It detects your project setup, guides you through commits, and creates PRs automatically.
 
 ## Features
 
-- ✅ **Zero config** - Works immediately in any Git repo
-- ✅ **Smart caching** - Remembers your preferences
-- ✅ **Auto-generates config** - With examples and comments
-- ✅ **GitHub CLI auto-install** - One-click installation
-- ✅ **Conventional commits** - Optional support with auto-suggestions
-- ✅ **Pre-commit hooks** - Runs lint/format automatically
-- ✅ **Beginner friendly** - Simple mode asks just one question
-- ✅ **Powerful** - Full customization for advanced users
+- **Zero config** - Works immediately in any Git repo
+- **Smart caching** - Remembers your preferences
+- **Auto-generates config** - With examples and comments
+- **GitHub CLI auto-install** - One-click installation
+- **Conventional commits** - Optional support with auto-suggestions
+- **Pre-commit hooks** - Runs lint/format automatically
+- **Beginner friendly** - Simple mode asks just one question
+- **Powerful** - Full customization for advanced users
 
 ## Quick Start
 
 ```bash
 # Run in your project
 npx pr-pilot
-
-# That's it! 🚀
 ```
 
 ## Installation
@@ -69,9 +68,9 @@ $ pr-pilot
 ✓ Committing changes...
 ✓ Pushing to remote...
 ✓ Creating pull request...
-🎉 https://github.com/your-org/repo/pull/123
+https://github.com/your-org/repo/pull/123
 
-✅ Done!
+Done!
 ```
 
 ### Intermediate Mode (Conventional Commits)
@@ -95,9 +94,9 @@ Issue references: closes #123
 ✓ Committing changes...
 ✓ Pushing to remote...
 ✓ Creating pull request...
-🎉 https://github.com/your-org/repo/pull/124
+https://github.com/your-org/repo/pull/124
 
-✅ Done!
+Done!
 ```
 
 ### Force Conventional Mode
@@ -212,8 +211,8 @@ PR Pilot detects:
 ```bash
 # No config needed
 $ pr-pilot
-📝 What did you change? Added dark mode
-✅ Done!
+What did you change? Added dark mode
+Done!
 ```
 
 ### Example 2: Monorepo with Conventional Commits
@@ -224,7 +223,7 @@ $ pr-pilot
 Type? feat
 Scope? web  # auto-suggested from changed files
 Subject? add dark mode toggle
-✅ Done!
+Done!
 ```
 
 ### Example 3: Custom Workflow
@@ -248,7 +247,7 @@ export default defineConfig({
 $ pr-pilot
 # Runs strict lint, format, and tests
 # Creates draft PR with label
-✅ Done!
+Done!
 ```
 
 ## Requirements
@@ -324,14 +323,10 @@ We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
-MIT © Scrollz Team
+MIT © Fas
 
 ## Links
 
-- [Documentation](https://github.com/your-org/pr-pilot)
-- [Issues](https://github.com/your-org/pr-pilot/issues)
+- [Documentation](https://github.com/whyte25/pr-pilot)
+- [Issues](https://github.com/whyte25/pr-pilot/issues)
 - [Changelog](CHANGELOG.md)
-
----
-
-Made with ❤️ by the Scrollz team

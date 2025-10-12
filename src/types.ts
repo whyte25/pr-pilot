@@ -25,24 +25,37 @@ export type ConventionalType =
  */
 export interface Config {
   commit: {
+    /** Commit message format: 'conventional' or 'simple' */
     format: CommitFormat
+    /** Scopes: 'auto' to detect, array of strings, or false to disable */
     scopes: 'auto' | string[] | false
+    /** Maximum commit message length (50-200) */
     maxLength: number
   }
   hooks: {
+    /** Lint command: true (auto-detect), false (disable), or custom command */
     lint: boolean | string
+    /** Format command: true (auto-detect), false (disable), or custom command */
     format: boolean | string
+    /** Test command: true (auto-detect), false (disable), or custom command */
     test: boolean | string
   }
   git: {
+    /** When to prompt for branch creation: 'always', 'protected', or 'never' */
     promptForBranch: BranchPromptMode
+    /** List of protected branch names */
     protectedBranches: string[]
   }
   pr: {
+    /** Base branch: 'auto', 'main', 'master', 'develop', 'dev', or custom */
     base: PRBase
+    /** Create draft PR */
     draft: boolean
+    /** Labels to add to PR */
     labels: string[]
+    /** Reviewers to request */
     reviewers: string[]
+    /** Use PR template from .github/PULL_REQUEST_TEMPLATE.md */
     template: boolean
   }
 }

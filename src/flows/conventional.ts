@@ -1,6 +1,12 @@
 import pc from 'picocolors'
 import { promptConventionalCommit, buildConventionalMessage } from '../prompts/conventional.js'
-import { commitChanges, pushChanges, isWorkingTreeClean, getChangedFiles } from '../actions/git.js'
+import {
+  commitChanges,
+  pushChanges,
+  isWorkingTreeClean,
+  getChangedFiles,
+  promptForBranch,
+} from '../actions/git.js'
 import { createPullRequest } from '../actions/pr.js'
 import { runPreCommitHooks } from '../actions/hooks.js'
 import { detectScopes, suggestScopeFromChanges } from '../detectors/scopes.js'
@@ -19,6 +25,9 @@ export async function runConventionalFlow(cwd: string, config: Config): Promise<
     console.log(pc.yellow('💡 No changes to commit. Working tree is clean.\n'))
     return
   }
+
+  // Prompt for branch creation if on protected branch
+  await promptForBranch(cwd)
 
   // Detect scopes
   const scopes = await detectScopes(cwd, config)

@@ -1,9 +1,9 @@
 import ora from 'ora'
 import pc from 'picocolors'
 import { simpleGit } from 'simple-git'
-import { runCommand } from '../utils/exec.js'
 import { ensureGitHubCLI } from '../github/setup.js'
 import type { Config } from '../types.js'
+import { runCommand } from '../utils/exec.js'
 
 /**
  * Creates a GitHub PR using gh CLI
@@ -33,9 +33,12 @@ export async function createPullRequest(
     const currentBranch = await git.revparse(['--abbrev-ref', 'HEAD'])
     const branch = currentBranch.trim()
 
-    // Escape backticks and backslashes in title and body to prevent shell interpretation
-    const escapedTitle = title.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/"/g, '\\"')
-    const escapedBody = body.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/"/g, '\\"')
+    // Escape special characters to prevent shell interpretation
+    const escapeForShell = (value: string) =>
+      value.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/"/g, '\\"').replace(/\$/g, '\\$')
+
+    const escapedTitle = escapeForShell(title)
+    const escapedBody = escapeForShell(body)
 
     const args = ['pr', 'create', '--title', escapedTitle, '--body', escapedBody, '--head', branch]
 

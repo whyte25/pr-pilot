@@ -1,0 +1,44 @@
+{
+  "name": "@pr-pilot/mcp-server",
+  "version": "1.0.0",
+  "description": "MCP server for PR Pilot - expose PR automation tools to AI assistants",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "ai",
+    "claude",
+    "pr-pilot",
+    "git",
+    "github"
+  ],
+  "author": "Fas",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "pr-pilot-mcp": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "@pr-pilot/core": "workspace:*",
+    "simple-git": "^3.27.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "tsup": "^8.5.0",
+    "typescript": "^5.7.3"
+  },
+  "engines": {
+    "node": ">=20.8.1"
+  }
+}

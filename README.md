@@ -7,9 +7,9 @@ Your PR autopilot - create pull requests with ease
 This is a Turborepo monorepo containing all PR Pilot packages:
 
 - **[@pr-pilot/core](./packages/core)** - Core CLI and library
+- **[@pr-pilot/mcp-server](./packages/mcp-server)** - MCP server for AI assistants (Claude, Cursor, Windsurf, etc.)
 - **@pr-pilot/vscode** - VS Code extension (coming soon)
 - **@pr-pilot/ui** - Web UI with Next.js (coming soon)
-- **@pr-pilot/mcp-server** - MCP server for AI assistants (coming soon)
 
 ## 🚀 Quick Start
 

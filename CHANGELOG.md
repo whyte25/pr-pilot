@@ -1,3 +1,16 @@
+# [1.2.0](https://github.com/whyte25/pr-pilot/compare/v1.1.1...v1.2.0) (2025-10-12)
+
+
+### Bug Fixes
+
+* **actions:** escape backticks in PR title and body ([e969e5f](https://github.com/whyte25/pr-pilot/commit/e969e5fb76633c0927a819cb76d0b5b65e4db76e))
+* **flows:** auto-push branch if not tracked in pr-only flow ([ab6a1be](https://github.com/whyte25/pr-pilot/commit/ab6a1be2cb3ad7b5d6f9771baeb4e84230342e5f))
+
+
+### Features
+
+* **config:** add git.promptForBranch config option ([41d25be](https://github.com/whyte25/pr-pilot/commit/41d25beb69561e25ff4a390c3a3fc42f6d7f1090))
+
 ## [1.1.1](https://github.com/whyte25/pr-pilot/compare/v1.1.0...v1.1.1) (2025-10-12)
 
 

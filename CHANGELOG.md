@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/whyte25/pr-pilot/compare/v1.1.0...v1.1.1) (2025-10-12)
+
+
+### Bug Fixes
+
+* **actions:** replace any with unknown in error handling ([16e0c70](https://github.com/whyte25/pr-pilot/commit/16e0c70ae2ed1151b0a6ea63241f41a73ba0d7ea))
+
 # [1.1.0](https://github.com/whyte25/pr-pilot/compare/v1.0.0...v1.1.0) (2025-10-12)
 
 

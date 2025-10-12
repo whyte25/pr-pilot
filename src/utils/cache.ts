@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'fs'
+import { existsSync, readFileSync, writeFileSync, mkdirSync, appendFileSync } from 'fs'
 import { join, dirname } from 'path'
 
 interface CacheData {
@@ -42,6 +42,8 @@ export function writeCache(cwd: string, data: Partial<CacheData>): void {
   // Ensure cache directory exists
   if (!existsSync(cacheDir)) {
     mkdirSync(cacheDir, { recursive: true })
+    // Ensure .pr-pilot is in .gitignore when creating cache for first time
+    ensureCacheInGitignore(cwd)
   }
 
   // Merge with existing cache
@@ -83,4 +85,36 @@ export function getCachedBaseBranch(cwd: string): string | null {
  */
 export function cacheBaseBranch(cwd: string, branch: string): void {
   writeCache(cwd, { baseBranch: branch })
+}
+
+/**
+ * Ensures .pr-pilot is in .gitignore
+ */
+export function ensureCacheInGitignore(cwd: string): void {
+  const gitignorePath = join(cwd, '.gitignore')
+  const cacheEntry = '.pr-pilot'
+
+  // If .gitignore doesn't exist, create it with .pr-pilot
+  if (!existsSync(gitignorePath)) {
+    try {
+      writeFileSync(gitignorePath, `${cacheEntry}\n`)
+    } catch {
+      // Silently fail - not critical
+    }
+    return
+  }
+
+  // Check if .pr-pilot is already in .gitignore
+  try {
+    const gitignoreContent = readFileSync(gitignorePath, 'utf-8')
+    if (gitignoreContent.includes(cacheEntry)) {
+      return // Already there
+    }
+
+    // Add .pr-pilot to .gitignore
+    const newLine = gitignoreContent.endsWith('\n') ? '' : '\n'
+    appendFileSync(gitignorePath, `${newLine}${cacheEntry}\n`)
+  } catch {
+    // Silently fail - not critical
+  }
 }

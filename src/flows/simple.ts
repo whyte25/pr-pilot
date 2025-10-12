@@ -2,6 +2,7 @@ import pc from 'picocolors'
 import { promptSimpleCommit } from '../prompts/simple.js'
 import { commitChanges, pushChanges, isWorkingTreeClean, promptForBranch } from '../actions/git.js'
 import { createPullRequest } from '../actions/pr.js'
+import { ensureGitHubCLI } from '../github/setup.js'
 import type { Config } from '../types.js'
 
 /**
@@ -10,6 +11,12 @@ import type { Config } from '../types.js'
  */
 export async function runSimpleFlow(cwd: string, config: Config): Promise<void> {
   console.log(pc.cyan('\n✈️  PR Pilot - Simple Mode\n'))
+
+  // Check GitHub CLI early (so user knows upfront)
+  const ghReady = await ensureGitHubCLI()
+  if (!ghReady) {
+    console.log(pc.yellow('\n💡 You can still commit and push, but PR creation will be manual.\n'))
+  }
 
   // Check if there are changes
   const isClean = await isWorkingTreeClean(cwd)

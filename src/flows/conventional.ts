@@ -10,6 +10,7 @@ import {
 import { createPullRequest } from '../actions/pr.js'
 import { runPreCommitHooks } from '../actions/hooks.js'
 import { detectScopes, suggestScopeFromChanges } from '../detectors/scopes.js'
+import { ensureGitHubCLI } from '../github/setup.js'
 import type { Config } from '../types.js'
 
 /**
@@ -18,6 +19,12 @@ import type { Config } from '../types.js'
  */
 export async function runConventionalFlow(cwd: string, config: Config): Promise<void> {
   console.log(pc.cyan('\n✈️  PR Pilot - Conventional Commits\n'))
+
+  // Check GitHub CLI early (so user knows upfront)
+  const ghReady = await ensureGitHubCLI()
+  if (!ghReady) {
+    console.log(pc.yellow('\n💡 You can still commit and push, but PR creation will be manual.\n'))
+  }
 
   // Check if there are changes
   const isClean = await isWorkingTreeClean(cwd)

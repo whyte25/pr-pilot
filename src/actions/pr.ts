@@ -6,7 +6,7 @@ import type { Config } from '../types.js'
 
 /**
  * Creates a GitHub PR using gh CLI
- * Auto-installs and authenticates if needed
+ * Note: GitHub CLI check should be done earlier in the flow
  */
 export async function createPullRequest(
   cwd: string,
@@ -14,7 +14,7 @@ export async function createPullRequest(
   body: string,
   config: Config
 ): Promise<void> {
-  // Ensure GitHub CLI is ready (install + auth if needed)
+  // Quick check if gh is available (already checked earlier, but verify)
   const ready = await ensureGitHubCLI()
 
   if (!ready) {

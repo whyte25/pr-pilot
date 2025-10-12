@@ -12,6 +12,7 @@ import { createPullRequest } from '../actions/pr.js'
 import { detectScopes, suggestScopeFromChanges } from '../detectors/scopes.js'
 import { ensureGitHubCLI } from '../github/setup.js'
 import { buildConventionalMessage, promptConventionalCommit } from '../prompts/conventional.js'
+import { promptChangeTypes, buildChangeTypeSection } from '../prompts/change-types.js'
 import { runPROnlyFlow } from './pr-only.js'
 import type { Config } from '../types.js'
 
@@ -77,9 +78,12 @@ export async function runConventionalFlow(cwd: string, config: Config): Promise<
   // Push
   await pushChanges(cwd)
 
+  // Ask for type of changes for PR
+  const changeTypes = await promptChangeTypes()
+
   // Create PR
   const prTitle = `${answers.type}(${answers.scope}): ${answers.subject}`
-  const prBody = buildPRBody(answers.subject, answers.body, answers.type)
+  const prBody = buildPRBody(answers.subject, answers.body, changeTypes)
   await createPullRequest(cwd, prTitle, prBody, config)
 
   console.log(pc.green('✅ Done!\n'))
@@ -88,29 +92,12 @@ export async function runConventionalFlow(cwd: string, config: Config): Promise<
 /**
  * Builds PR body with template structure
  */
-function buildPRBody(subject: string, body: string | undefined, type: string): string {
-  const typeCheckboxes = {
-    feat: '- [x] New feature',
-    fix: '- [x] Bug fix',
-    docs: '- [x] Documentation',
-    refactor: '- [x] Code refactoring',
-    perf: '- [x] Performance improvement',
-  }
-
-  const checkedType = typeCheckboxes[type as keyof typeof typeCheckboxes] || '- [ ] Other'
-  const otherTypes = Object.entries(typeCheckboxes)
-    .filter(([key]) => key !== type)
-    .map(([, value]) => value.replace('[x]', '[ ]'))
-
+function buildPRBody(subject: string, body: string | undefined, changeTypes: string[]): string {
   return `## Description
 
 ${body || subject}
 
-## Type of Change
-
-${checkedType}
-${otherTypes.join('\n')}
-- [ ] Breaking change
+${buildChangeTypeSection(changeTypes)}
 
 ## Changes Made
 

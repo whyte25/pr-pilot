@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/whyte25/pr-pilot/compare/v1.2.0...v1.2.1) (2025-10-12)
+
+### Bug Fixes
+
+- **actions:** escape dollar signs to prevent shell expansion ([544a7ed](https://github.com/whyte25/pr-pilot/commit/544a7ed9e0e0ae67e939729244afd9944108de61))
+- **flows:** fetch remote refs before comparing commits ([e5c26c7](https://github.com/whyte25/pr-pilot/commit/e5c26c787fee5d01eb8cca188116fc7e3f88068a))
+
 # [1.2.0](https://github.com/whyte25/pr-pilot/compare/v1.1.1...v1.2.0) (2025-10-12)
 
 ### Bug Fixes

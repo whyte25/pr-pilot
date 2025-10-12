@@ -9,7 +9,7 @@ export default defineConfig({
   treeshake: true,
   splitting: false,
   sourcemap: false,
-  target: 'node18',
+  target: 'node20',
   outDir: 'dist',
   shims: true,
 })

@@ -1,4 +1,4 @@
-# @pr-pilot/mcp-server
+# pr-pilot-mcp
 
 MCP (Model Context Protocol) server for PR Pilot - expose PR automation tools to AI assistants.
 
@@ -83,7 +83,7 @@ Validate a commit message against conventional commits standards.
 ### Global Installation
 
 ```bash
-npm install -g @pr-pilot/mcp-server
+npm install -g pr-pilot-mcp
 ```
 
 ## Configuration
@@ -97,7 +97,7 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS)
   "mcpServers": {
     "pr-pilot": {
       "command": "npx",
-      "args": ["-y", "@pr-pilot/mcp-server"]
+      "args": ["-y", "pr-pilot-mcp"]
     }
   }
 }
@@ -112,7 +112,7 @@ Add to your Cursor MCP settings:
   "mcpServers": {
     "pr-pilot": {
       "command": "npx",
-      "args": ["-y", "@pr-pilot/mcp-server"]
+      "args": ["-y", "pr-pilot-mcp"]
     }
   }
 }
@@ -127,7 +127,7 @@ Add to Windsurf MCP configuration:
   "mcpServers": {
     "pr-pilot": {
       "command": "npx",
-      "args": ["-y", "@pr-pilot/mcp-server"]
+      "args": ["-y", "pr-pilot-mcp"]
     }
   }
 }
@@ -142,7 +142,7 @@ Add to your MCP settings file:
   "mcpServers": {
     "pr-pilot": {
       "command": "npx",
-      "args": ["-y", "@pr-pilot/mcp-server"]
+      "args": ["-y", "pr-pilot-mcp"]
     }
   }
 }
@@ -154,7 +154,7 @@ The server runs on stdio and follows the MCP specification, so it works with any
 
 ```bash
 # Run directly
-npx @pr-pilot/mcp-server
+npx pr-pilot-mcp
 
 # Or if installed globally
 pr-pilot-mcp

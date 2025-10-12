@@ -1,5 +1,5 @@
 {
-  "name": "@pr-pilot/mcp-server",
+  "name": "pr-pilot-mcp",
   "version": "1.0.0",
   "description": "MCP server for PR Pilot - expose PR automation tools to AI assistants",
   "keywords": [
@@ -17,7 +17,8 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
-    "pr-pilot-mcp": "./dist/index.js"
+    "pr-pilot-mcp": "./dist/index.js",
+    "prp-mcp": "./dist/index.js"
   },
   "files": [
     "dist",

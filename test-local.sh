@@ -15,7 +15,7 @@ PR_PILOT_CLI="$SCRIPT_DIR/dist/cli.js"
 # Check if dist/cli.js exists
 if [ ! -f "$PR_PILOT_CLI" ]; then
     echo -e "${YELLOW}Building pr-pilot first...${NC}"
-    cd "$SCRIPT_DIR"
+    cd "$SCRIPT_DIR" || exit 1
     pnpm run build
     echo ""
 fi

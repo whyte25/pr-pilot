@@ -1,7 +1,20 @@
-dist
+# Dependencies
 node_modules
+
+# Build outputs
+dist
+.next
+.turbo
+
+# Logs
 *.log
+
+# OS
 .DS_Store
+
+# Environment
 .env
 .env.local
+
+# PR Pilot cache
 .pr-pilot

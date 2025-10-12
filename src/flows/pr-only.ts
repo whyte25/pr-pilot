@@ -148,6 +148,7 @@ export async function runPROnlyFlow(cwd: string, config: Config): Promise<void> 
       default: defaultTitle,
       validate: (value) => {
         if (!value.trim()) return 'PR title cannot be empty'
+        if (value.length > 100) return `Title too long (${value.length}/100 characters)`
         return true
       },
     })

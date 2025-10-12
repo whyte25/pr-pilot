@@ -33,7 +33,11 @@ export async function createPullRequest(
     const currentBranch = await git.revparse(['--abbrev-ref', 'HEAD'])
     const branch = currentBranch.trim()
 
-    const args = ['pr', 'create', '--title', title, '--body', body, '--head', branch]
+    // Escape backticks and backslashes in title and body to prevent shell interpretation
+    const escapedTitle = title.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/"/g, '\\"')
+    const escapedBody = body.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/"/g, '\\"')
+
+    const args = ['pr', 'create', '--title', escapedTitle, '--body', escapedBody, '--head', branch]
 
     // Add base branch if specified
     if (baseBranch) {

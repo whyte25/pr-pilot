@@ -46,8 +46,8 @@ export async function runConventionalFlow(cwd: string, config: Config): Promise<
     return
   }
 
-  // Prompt for branch creation if on protected branch
-  await promptForBranch(cwd)
+  // Prompt for branch creation if on protected branch (FIRST!)
+  await promptForBranch(cwd, config.git)
 
   // Detect scopes
   const scopes = await detectScopes(cwd, config)
@@ -63,6 +63,9 @@ export async function runConventionalFlow(cwd: string, config: Config): Promise<
   // Prompt for commit details
   const answers = await promptConventionalCommit(scopes, suggestedScope, config.commit.maxLength)
 
+  // Ask for type of changes for PR (before commit)
+  const changeTypes = await promptChangeTypes()
+
   // Build commit message
   const commitMessage = buildConventionalMessage(answers)
 
@@ -77,9 +80,6 @@ export async function runConventionalFlow(cwd: string, config: Config): Promise<
 
   // Push
   await pushChanges(cwd)
-
-  // Ask for type of changes for PR
-  const changeTypes = await promptChangeTypes()
 
   // Create PR
   const prTitle = `${answers.type}(${answers.scope}): ${answers.subject}`

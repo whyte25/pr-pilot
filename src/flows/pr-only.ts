@@ -112,8 +112,14 @@ export async function runPROnlyFlow(cwd: string, config: Config): Promise<void> 
 
     // Check if current branch needs to be pushed
     const status = await git.status()
-    if (status.ahead > 0) {
-      console.log(pc.yellow(`⚠️  You have ${status.ahead} unpushed commit(s)\n`))
+    const needsPush = status.ahead > 0 || !status.tracking
+
+    if (needsPush) {
+      if (status.ahead > 0) {
+        console.log(pc.yellow(`⚠️  You have ${status.ahead} unpushed commit(s)\n`))
+      } else {
+        console.log(pc.yellow(`⚠️  Branch not pushed to remote\n`))
+      }
       await pushChanges(cwd)
       console.log()
     }

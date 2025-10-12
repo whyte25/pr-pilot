@@ -1,5 +1,5 @@
 import pc from 'picocolors'
-import { input, select } from '@inquirer/prompts'
+import { input, select, checkbox } from '@inquirer/prompts'
 import { simpleGit } from 'simple-git'
 import { createPullRequest } from '../actions/pr.js'
 import { ensureGitHubCLI } from '../github/setup.js'
@@ -130,10 +130,24 @@ export async function runPROnlyFlow(cwd: string, config: Config): Promise<void> 
       default: '',
     })
 
-    // Build full PR body with commits
+    // Ask for type of change
+    const changeTypes = await checkbox({
+      message: 'Type of change (select all that apply):',
+      choices: [
+        { name: 'Bug fix', value: 'bugfix' },
+        { name: 'New feature', value: 'feature' },
+        { name: 'Breaking change', value: 'breaking' },
+        { name: 'Documentation', value: 'docs' },
+        { name: 'Code refactoring', value: 'refactor' },
+        { name: 'Performance improvement', value: 'perf' },
+      ],
+    })
+
+    // Build full PR body with commits and change types
     const fullBody = buildPRBody(
       prBody,
-      log.all.map((c) => c.message.split('\n')[0])
+      log.all.map((c) => c.message.split('\n')[0]),
+      changeTypes
     )
 
     // Create PR
@@ -147,9 +161,9 @@ export async function runPROnlyFlow(cwd: string, config: Config): Promise<void> 
 }
 
 /**
- * Builds PR body with commit list
+ * Builds PR body with commit list and change types
  */
-function buildPRBody(description: string, commits: string[]): string {
+function buildPRBody(description: string, commits: string[], changeTypes: string[]): string {
   let body = '## Description\n\n'
   body += description || 'This PR includes the following changes:\n'
   body += '\n## Commits\n\n'
@@ -157,12 +171,21 @@ function buildPRBody(description: string, commits: string[]): string {
     body += `- ${msg}\n`
   })
   body += '\n## Type of Change\n\n'
-  body += '- [ ] Bug fix\n'
-  body += '- [ ] New feature\n'
-  body += '- [ ] Breaking change\n'
-  body += '- [ ] Documentation\n'
-  body += '- [ ] Code refactoring\n'
-  body += '- [ ] Performance improvement\n'
+
+  // Mark selected change types with [x]
+  const typeMap: Record<string, string> = {
+    bugfix: 'Bug fix',
+    feature: 'New feature',
+    breaking: 'Breaking change',
+    docs: 'Documentation',
+    refactor: 'Code refactoring',
+    perf: 'Performance improvement',
+  }
+
+  Object.entries(typeMap).forEach(([key, label]) => {
+    const checked = changeTypes.includes(key) ? 'x' : ' '
+    body += `- [${checked}] ${label}\n`
+  })
 
   return body
 }

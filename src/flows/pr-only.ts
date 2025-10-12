@@ -84,7 +84,17 @@ export async function runPROnlyFlow(cwd: string, config: Config): Promise<void> 
     }
   }
 
-  console.log(pc.dim(`\nChecking commits ahead of ${baseBranch}...\n`))
+  console.log(pc.dim(`\nFetching latest changes from remote...\n`))
+
+  // Fetch latest changes to ensure we have up-to-date refs
+  try {
+    await git.fetch('origin', baseBranch)
+  } catch {
+    // Fetch might fail if branch doesn't exist on remote, continue anyway
+    console.log(pc.dim(`Could not fetch ${baseBranch}, using local refs\n`))
+  }
+
+  console.log(pc.dim(`Checking commits ahead of ${baseBranch}...\n`))
 
   // Check if there are commits ahead of base branch FIRST
   try {

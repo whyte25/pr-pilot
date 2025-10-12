@@ -39,19 +39,19 @@ export async function runSimpleFlow(cwd: string, config: Config): Promise<void> 
   }
 
   // Prompt for branch creation if on protected branch
-  await promptForBranch(cwd)
+  await promptForBranch(cwd, config.git)
 
   // Ask one question
   const answers = await promptSimpleCommit()
+
+  // Ask for type of changes for PR (before commit)
+  const changeTypes = await promptChangeTypes()
 
   // Commit
   await commitChanges(cwd, answers.message)
 
   // Push
   await pushChanges(cwd)
-
-  // Ask for type of changes for PR
-  const changeTypes = await promptChangeTypes()
 
   // Build PR body with change types
   const prBody = `## Description\n\n${answers.message}\n\n${buildChangeTypeSection(changeTypes)}`

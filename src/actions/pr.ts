@@ -1,5 +1,6 @@
 import ora from 'ora'
 import pc from 'picocolors'
+import { simpleGit } from 'simple-git'
 import { runCommand } from '../utils/exec.js'
 import { ensureGitHubCLI } from '../github/setup.js'
 import type { Config } from '../types.js'
@@ -27,7 +28,12 @@ export async function createPullRequest(
   const spinner = ora('Creating pull request...').start()
 
   try {
-    const args = ['pr', 'create', '--title', title, '--body', body]
+    // Get current branch to use as head
+    const git = simpleGit(cwd)
+    const currentBranch = await git.revparse(['--abbrev-ref', 'HEAD'])
+    const branch = currentBranch.trim()
+
+    const args = ['pr', 'create', '--title', title, '--body', body, '--head', branch]
 
     // Add base branch if specified
     if (baseBranch) {

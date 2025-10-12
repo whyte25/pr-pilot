@@ -20,6 +20,13 @@ export const configSchema = z.object({
     })
     .default({}),
 
+  git: z
+    .object({
+      promptForBranch: z.enum(['always', 'protected', 'never']).default('always'),
+      protectedBranches: z.array(z.string()).default(['main', 'master', 'develop', 'dev']),
+    })
+    .default({}),
+
   pr: z
     .object({
       base: z.union([z.literal('auto'), z.string()]).default('auto'),

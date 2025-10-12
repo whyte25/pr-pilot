@@ -108,33 +108,52 @@ export async function createBranch(cwd: string, branchName: string): Promise<voi
 }
 
 /**
- * Prompts user to create a new branch if on main/master/develop
+ * Prompts user to create a new branch based on config
+ * - 'always': Always ask
+ * - 'protected': Only ask if on protected branch
+ * - 'never': Never ask
  */
-export async function promptForBranch(cwd: string): Promise<void> {
+export async function promptForBranch(
+  cwd: string,
+  config: { promptForBranch: 'always' | 'protected' | 'never'; protectedBranches: string[] }
+): Promise<void> {
   const currentBranch = await getCurrentBranch(cwd)
-  const protectedBranches = ['main', 'master', 'develop', 'dev']
+  const { promptForBranch: mode, protectedBranches } = config
 
+  // Never ask
+  if (mode === 'never') {
+    return
+  }
+
+  // Only ask if on protected branch
+  if (mode === 'protected' && !protectedBranches.includes(currentBranch)) {
+    return
+  }
+
+  // Warn if on protected branch
   if (protectedBranches.includes(currentBranch)) {
     console.log(pc.yellow(`\n⚠️  You're on '${currentBranch}' branch\n`))
+  } else {
+    console.log(pc.dim(`\n📍 Current branch: ${currentBranch}\n`))
+  }
 
-    const shouldCreateBranch = await confirm({
-      message: 'Do you want to create a new branch for this PR?',
-      default: true,
+  const shouldCreateBranch = await confirm({
+    message: 'Do you want to create a new branch for this PR?',
+    default: protectedBranches.includes(currentBranch),
+  })
+
+  if (shouldCreateBranch) {
+    const branchName = await input({
+      message: 'Enter branch name:',
+      default: 'feat/new-feature',
+      validate: (value) => {
+        if (!value.trim()) return 'Branch name cannot be empty'
+        if (value.includes(' ')) return 'Branch name cannot contain spaces'
+        return true
+      },
     })
 
-    if (shouldCreateBranch) {
-      const branchName = await input({
-        message: 'Enter branch name:',
-        default: 'feat/new-feature',
-        validate: (value) => {
-          if (!value.trim()) return 'Branch name cannot be empty'
-          if (value.includes(' ')) return 'Branch name cannot contain spaces'
-          return true
-        },
-      })
-
-      await createBranch(cwd, branchName.trim())
-      console.log()
-    }
+    await createBranch(cwd, branchName.trim())
+    console.log()
   }
 }

@@ -1,16 +1,16 @@
 # ✈️ PR Pilot
 
 > Your PR autopilot - create pull requests with ease
-
-PR Pilot automates the tedious parts of creating pull requests. It detects your project setup, guides you through commits, and creates PRs automatically.
+> PR Pilot automates the tedious parts of creating pull requests. It detects your project setup, guides you through commits, and creates PRs automatically.
 
 ## Features
 
 - ✅ **Zero config** - Works immediately in any Git repo
-- ✅ **Smart detection** - Auto-detects commit format, scopes, and tools
+- ✅ **Smart caching** - Remembers your preferences
+- ✅ **Auto-generates config** - With examples and comments
+- ✅ **GitHub CLI auto-install** - One-click installation
 - ✅ **Conventional commits** - Optional support with auto-suggestions
 - ✅ **Pre-commit hooks** - Runs lint/format automatically
-- ✅ **GitHub integration** - Creates PRs via GitHub CLI
 - ✅ **Beginner friendly** - Simple mode asks just one question
 - ✅ **Powerful** - Full customization for advanced users
 
@@ -18,7 +18,7 @@ PR Pilot automates the tedious parts of creating pull requests. It detects your 
 
 ```bash
 # Run in your project
-npx @scrollz/pr-pilot
+npx pr-pilot
 
 # That's it! 🚀
 ```
@@ -28,20 +28,20 @@ npx @scrollz/pr-pilot
 ### One-time use (recommended)
 
 ```bash
-npx @scrollz/pr-pilot
+npx pr-pilot
 ```
 
 ### Global install
 
 ```bash
-npm install -g @scrollz/pr-pilot
+npm install -g pr-pilot
 pr-pilot
 ```
 
 ### Project install
 
 ```bash
-pnpm add -D @scrollz/pr-pilot
+pnpm add -D pr-pilot
 ```
 
 Add to `package.json`:
@@ -128,7 +128,7 @@ PR Pilot works without configuration, but you can customize it:
 ### Create `pr-pilot.config.ts`
 
 ```typescript
-import { defineConfig } from '@scrollz/pr-pilot'
+import { defineConfig } from 'pr-pilot'
 
 export default defineConfig({
   // Commit settings

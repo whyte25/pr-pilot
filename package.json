@@ -26,8 +26,8 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc --watch",
+    "build": "tsup",
+    "dev": "tsup --watch",
     "type-check": "tsc --noEmit",
     "lint": "eslint src --ext .ts",
     "lint:fix": "eslint src --ext .ts --fix",
@@ -59,6 +59,7 @@
     "lint-staged": "^15.3.0",
     "prettier": "^3.4.2",
     "semantic-release": "^24.2.0",
+    "tsup": "^8.5.0",
     "typescript": "^5.7.3"
   },
   "engines": {

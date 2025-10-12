@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 
-import pc from 'picocolors'
 import { select } from '@inquirer/prompts'
+import pc from 'picocolors'
 import { loadConfig } from './config/loader.js'
-import { runSimpleFlow } from './flows/simple.js'
-import { runConventionalFlow } from './flows/conventional.js'
-import { getCachedCommitFormat, cacheCommitFormat } from './utils/cache.js'
-import { initConfigFile } from './utils/init-config.js'
 import { detectScopes } from './detectors/scopes.js'
+import { runConventionalFlow } from './flows/conventional.js'
+import { runSimpleFlow } from './flows/simple.js'
+import { cacheCommitFormat, getCachedCommitFormat } from './utils/cache.js'
+import { initConfigFile } from './utils/init-config.js'
 
 /**
  * CLI entry point for PR Pilot

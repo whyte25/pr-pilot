@@ -1,8 +1,10 @@
 import pc from 'picocolors'
-import { promptSimpleCommit } from '../prompts/simple.js'
-import { commitChanges, pushChanges, isWorkingTreeClean, promptForBranch } from '../actions/git.js'
+import { confirm } from '@inquirer/prompts'
+import { commitChanges, isWorkingTreeClean, promptForBranch, pushChanges } from '../actions/git.js'
 import { createPullRequest } from '../actions/pr.js'
 import { ensureGitHubCLI } from '../github/setup.js'
+import { promptSimpleCommit } from '../prompts/simple.js'
+import { runPROnlyFlow } from './pr-only.js'
 import type { Config } from '../types.js'
 
 /**
@@ -22,6 +24,16 @@ export async function runSimpleFlow(cwd: string, config: Config): Promise<void> 
   const isClean = await isWorkingTreeClean(cwd)
   if (isClean) {
     console.log(pc.yellow('💡 No changes to commit. Working tree is clean.\n'))
+
+    // Ask if they want to create PR from existing commits
+    const createPR = await confirm({
+      message: 'Do you have committed changes you want to create a PR for?',
+      default: false,
+    })
+
+    if (createPR) {
+      await runPROnlyFlow(cwd, config)
+    }
     return
   }
 

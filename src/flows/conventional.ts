@@ -1,16 +1,18 @@
 import pc from 'picocolors'
-import { promptConventionalCommit, buildConventionalMessage } from '../prompts/conventional.js'
+import { confirm } from '@inquirer/prompts'
 import {
   commitChanges,
-  pushChanges,
-  isWorkingTreeClean,
   getChangedFiles,
+  isWorkingTreeClean,
   promptForBranch,
+  pushChanges,
 } from '../actions/git.js'
-import { createPullRequest } from '../actions/pr.js'
 import { runPreCommitHooks } from '../actions/hooks.js'
+import { createPullRequest } from '../actions/pr.js'
 import { detectScopes, suggestScopeFromChanges } from '../detectors/scopes.js'
 import { ensureGitHubCLI } from '../github/setup.js'
+import { buildConventionalMessage, promptConventionalCommit } from '../prompts/conventional.js'
+import { runPROnlyFlow } from './pr-only.js'
 import type { Config } from '../types.js'
 
 /**
@@ -30,6 +32,16 @@ export async function runConventionalFlow(cwd: string, config: Config): Promise<
   const isClean = await isWorkingTreeClean(cwd)
   if (isClean) {
     console.log(pc.yellow('💡 No changes to commit. Working tree is clean.\n'))
+
+    // Ask if they want to create PR from existing commits
+    const createPR = await confirm({
+      message: 'Do you have committed changes you want to create a PR for?',
+      default: false,
+    })
+
+    if (createPR) {
+      await runPROnlyFlow(cwd, config)
+    }
     return
   }
 

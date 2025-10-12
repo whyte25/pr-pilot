@@ -1,3 +1,16 @@
+# [1.3.0](https://github.com/whyte25/pr-pilot/compare/v1.2.1...v1.3.0) (2025-10-12)
+
+
+### Bug Fixes
+
+* **flows:** add PR title length validation ([afb4092](https://github.com/whyte25/pr-pilot/commit/afb4092b91528cb8548320740732926a04afaf41))
+
+
+### Features
+
+* **config:** add explicit literal types to defineConfig ([3af7a5c](https://github.com/whyte25/pr-pilot/commit/3af7a5c2d6e78f655c5cc1e8e778a12ebbf0cd7b))
+* **config:** improve type hints and add same-branch check ([c2b0d43](https://github.com/whyte25/pr-pilot/commit/c2b0d439d350916455f14ade63c3f498cd7272c0))
+
 ## [1.2.1](https://github.com/whyte25/pr-pilot/compare/v1.2.0...v1.2.1) (2025-10-12)
 
 ### Bug Fixes

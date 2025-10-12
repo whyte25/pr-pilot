@@ -1,7 +1,7 @@
+import { confirm } from '@inquirer/prompts'
 import { existsSync, writeFileSync } from 'fs'
 import { join } from 'path'
 import pc from 'picocolors'
-import { confirm } from '@inquirer/prompts'
 
 /**
  * Generates a config file template with smart defaults and comments
@@ -45,7 +45,7 @@ function generateConfigTemplate(detectedScopes: string[]): string {
       ? `['${detectedScopes.slice(0, 5).join("', '")}']`
       : "['frontend', 'backend', 'docs']"
 
-  return `import { defineConfig } from '@scrollz/pr-pilot'
+  return `import { defineConfig } from 'pr-pilot'
 
 /**
  * PR Pilot Configuration

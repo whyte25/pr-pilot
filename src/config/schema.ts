@@ -46,7 +46,7 @@ export type Config = z.infer<typeof configSchema>
  * @example
  * ```ts
  * // pr-pilot.config.ts
- * import { defineConfig } from '@scrollz/pr-pilot'
+ * import { defineConfig } from 'pr-pilot'
  *
  * export default defineConfig({
  *   commit: {

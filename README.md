@@ -226,6 +226,12 @@ export default defineConfig({
     test: false, // disabled by default
   },
 
+  // Git settings
+  git: {
+    promptForBranch: 'always', // 'always' | 'protected' | 'never'
+    protectedBranches: ['main', 'master', 'develop', 'dev'],
+  },
+
   // PR settings
   pr: {
     base: 'auto', // or 'main', 'dev', etc.

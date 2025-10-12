@@ -4,6 +4,8 @@
 
 export type CommitFormat = 'conventional' | 'simple'
 export type PackageManager = 'npm' | 'pnpm' | 'yarn' | 'bun'
+export type BranchPromptMode = 'always' | 'protected' | 'never'
+export type PRBase = 'auto' | 'main' | 'master' | 'develop' | 'dev' | (string & {})
 
 export type ConventionalType =
   | 'feat'
@@ -33,11 +35,11 @@ export interface Config {
     test: boolean | string
   }
   git: {
-    promptForBranch: 'always' | 'protected' | 'never'
+    promptForBranch: BranchPromptMode
     protectedBranches: string[]
   }
   pr: {
-    base: 'auto' | string
+    base: PRBase
     draft: boolean
     labels: string[]
     reviewers: string[]

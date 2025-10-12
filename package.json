@@ -1,48 +1,21 @@
 {
-  "name": "pr-pilot",
+  "name": "pr-pilot-monorepo",
   "version": "1.2.1",
-  "description": "Your PR autopilot - create pull requests with ease",
-  "keywords": [
-    "git",
-    "github",
-    "pull-request",
-    "pr",
-    "conventional-commits",
-    "automation",
-    "cli",
-    "developer-tools"
-  ],
+  "private": true,
+  "description": "PR Pilot monorepo - CLI, VS Code extension, UI, and MCP server",
   "author": "Fas",
   "license": "MIT",
-  "type": "module",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "bin": {
-    "pr-pilot": "./dist/cli.js"
-  },
-  "files": [
-    "dist",
-    "README.md",
-    "LICENSE"
-  ],
+  "packageManager": "pnpm@9.15.4",
   "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch",
-    "type-check": "tsc --noEmit",
-    "lint": "eslint src --ext .ts",
-    "lint:fix": "eslint src --ext .ts --fix",
-    "format": "prettier --check \"src/**/*.ts\"",
-    "format:fix": "prettier --write \"src/**/*.ts\"",
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "typecheck": "turbo run typecheck",
+    "lint": "turbo run lint",
+    "lint:fix": "turbo run lint:fix",
+    "format": "prettier --check \"**/*.{ts,tsx,json,md}\"",
+    "format:fix": "prettier --write \"**/*.{ts,tsx,json,md}\"",
     "prepare": "husky",
-    "prepublishOnly": "pnpm run build"
-  },
-  "dependencies": {
-    "@inquirer/prompts": "^6.0.1",
-    "cosmiconfig": "^9.0.0",
-    "ora": "^8.1.1",
-    "picocolors": "^1.1.1",
-    "simple-git": "^3.27.0",
-    "zod": "^3.24.2"
+    "clean": "turbo run clean && rm -rf node_modules"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.6.1",
@@ -60,6 +33,7 @@
     "prettier": "^3.4.2",
     "semantic-release": "^24.2.0",
     "tsup": "^8.5.0",
+    "turbo": "^2.5.8",
     "typescript": "^5.7.3"
   },
   "engines": {

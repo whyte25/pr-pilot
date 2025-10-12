@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "pr-pilot": {
+      "command": "node",
+      "args": ["/absolute/path/to/pr-pilot/packages/mcp-server/dist/index.js"]
+    }
+  }
+}

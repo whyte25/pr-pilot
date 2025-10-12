@@ -1,6 +1,7 @@
 import { simpleGit, type SimpleGit } from 'simple-git'
 import ora from 'ora'
 import pc from 'picocolors'
+import { input, confirm } from '@inquirer/prompts'
 
 /**
  * Commits changes with the given message
@@ -88,4 +89,52 @@ export async function isWorkingTreeClean(cwd: string): Promise<boolean> {
   const git: SimpleGit = simpleGit(cwd)
   const status = await git.status()
   return status.isClean()
+}
+
+/**
+ * Creates a new branch
+ */
+export async function createBranch(cwd: string, branchName: string): Promise<void> {
+  const git: SimpleGit = simpleGit(cwd)
+  const spinner = ora(`Creating branch '${branchName}'...`).start()
+
+  try {
+    await git.checkoutLocalBranch(branchName)
+    spinner.succeed(`Created and switched to branch '${branchName}'`)
+  } catch (error: any) {
+    spinner.fail('Failed to create branch')
+    throw error
+  }
+}
+
+/**
+ * Prompts user to create a new branch if on main/master/develop
+ */
+export async function promptForBranch(cwd: string): Promise<void> {
+  const currentBranch = await getCurrentBranch(cwd)
+  const protectedBranches = ['main', 'master', 'develop', 'dev']
+
+  if (protectedBranches.includes(currentBranch)) {
+    console.log(pc.yellow(`\n⚠️  You're on '${currentBranch}' branch\n`))
+
+    const shouldCreateBranch = await confirm({
+      message: 'Do you want to create a new branch for this PR?',
+      default: true,
+    })
+
+    if (shouldCreateBranch) {
+      const branchName = await input({
+        message: 'Enter branch name:',
+        default: 'feat/new-feature',
+        validate: (value) => {
+          if (!value.trim()) return 'Branch name cannot be empty'
+          if (value.includes(' ')) return 'Branch name cannot contain spaces'
+          return true
+        },
+      })
+
+      await createBranch(cwd, branchName.trim())
+      console.log()
+    }
+  }
 }

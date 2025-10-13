@@ -8,6 +8,7 @@ import { runConventionalFlow } from './flows/conventional.js'
 import { runSimpleFlow } from './flows/simple.js'
 import { cacheCommitFormat, getCachedCommitFormat } from './utils/cache.js'
 import { initConfigFile } from './utils/init-config.js'
+import { startUI } from './commands/ui.js'
 
 /**
  * CLI entry point for PR Pilot
@@ -30,6 +31,13 @@ async function main() {
     // Show version
     if (flags.version) {
       showVersion()
+      return
+    }
+
+    // UI command - start the web UI
+    if (flags.ui) {
+      const port = flags.port || 3000
+      await startUI(port)
       return
     }
 
@@ -121,9 +129,16 @@ async function main() {
  * Parses CLI flags from arguments
  */
 function parseFlags(args: string[]) {
+  // Extract port number if provided
+  const portIndex = args.findIndex((arg) => arg === '--port' || arg === '-p')
+  const port =
+    portIndex !== -1 && args[portIndex + 1] ? parseInt(args[portIndex + 1], 10) : undefined
+
   return {
     help: args.includes('--help') || args.includes('-h'),
     version: args.includes('--version') || args.includes('-v'),
+    ui: args.includes('ui') || args.includes('--ui'),
+    port,
     init: args.includes('init') || args.includes('--init'),
     conventional: args.includes('--conventional'),
     simple: args.includes('--simple'),
@@ -144,6 +159,7 @@ ${pc.bold('Usage:')}
   ${pc.dim('$')} pr-pilot [command] [options]
 
 ${pc.bold('Commands:')}
+  ui                Open PR Pilot UI in browser
   init              Generate pr-pilot.config.ts with smart defaults
 
 ${pc.bold('Options:')}
@@ -152,10 +168,13 @@ ${pc.bold('Options:')}
   --no-lint         Skip linting
   --no-format       Skip formatting
   --draft           Create draft PR
+  -p, --port        Port for UI server (default: 3000)
   -h, --help        Show this help
   -v, --version     Show version
 
 ${pc.bold('Examples:')}
+  ${pc.dim('$')} pr-pilot ui                 ${pc.dim('# Open beautiful web UI')}
+  ${pc.dim('$')} pr-pilot ui --port 4000     ${pc.dim('# Use custom port')}
   ${pc.dim('$')} pr-pilot                    ${pc.dim('# First run: asks your preference, then caches it')}
   ${pc.dim('$')} pr-pilot init              ${pc.dim('# Generate config file with examples')}
   ${pc.dim('$')} pr-pilot --conventional     ${pc.dim('# Override cached preference')}
@@ -169,10 +188,10 @@ ${pc.bold('First Run:')}
 ${pc.bold('Configuration:')}
   Run ${pc.cyan('pr-pilot init')} to generate pr-pilot.config.ts
   Or create it manually for advanced customization
-  See: https://github.com/your-org/pr-pilot#configuration
+  See: https://github.com/whyte25/pr-pilot#configuration
 
 ${pc.bold('Learn more:')}
-  ${pc.dim('https://github.com/your-org/pr-pilot')}
+  ${pc.dim('https://github.com/whyte25/pr-pilot')}
 `)
 }
 

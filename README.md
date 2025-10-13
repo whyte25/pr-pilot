@@ -1,6 +1,38 @@
-# ✈️ PR Pilot
+# ✈️ PR Pilot ✈️
 
-> Your PR autopilot - create pull requests with ease
+Your PR autopilot - create pull requests with ease
+
+## 📦 Monorepo Structure
+
+This is a Turborepo monorepo containing all PR Pilot packages:
+
+- **[@pr-pilot/core](./packages/core)** - Core CLI and library
+- **[pr-pilot-mcp](./packages/mcp-server)** - MCP server for AI assistants (Claude, Cursor, Windsurf, etc.)
+- **@pr-pilot/vscode** - VS Code extension (coming soon)
+- **@pr-pilot/ui** - Web UI with Next.js (coming soon)
+
+## 🚀 Quick Start
+
+```bash
+# Install dependencies
+pnpm install
+
+# Build all packages
+pnpm run build
+
+# Run in development mode
+pnpm run dev
+```
+
+## 📚 Documentation
+
+See [packages/core](./packages/core) for the main CLI documentation.
+
+---
+
+# PR Pilot ✈️
+
+Your PR autopilot - create pull requests with ease
 
 PR Pilot automates the tedious parts of creating pull requests. It detects your project setup, guides you through commits, and creates PRs automatically.
 

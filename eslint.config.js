@@ -7,15 +7,17 @@ import globals from 'globals'
 export default [
   eslint.configs.recommended,
   {
-    files: ['src/**/*.ts'],
+    files: ['**/*.ts', '**/*.tsx'],
     languageOptions: {
       parser: tsparser,
       parserOptions: {
         ecmaVersion: 'latest',
         sourceType: 'module',
+        project: true,
       },
       globals: {
         ...globals.node,
+        ...globals.browser,
       },
     },
     plugins: {

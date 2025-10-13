@@ -1,11 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Sparkles, Copy, Check, ArrowRight } from 'lucide-react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { AnimatePresence, motion } from 'framer-motion'
+import { ArrowRight, Check, Copy, Sparkles } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 interface AIAnalysisResultProps {
@@ -76,9 +76,7 @@ export function AIAnalysisResult({ isAnalyzing, hasAnalyzed }: AIAnalysisResultP
           <Sparkles className="h-5 w-5 text-violet-500" />
           AI Suggestions
         </CardTitle>
-        <CardDescription>
-          AI-generated commit messages based on your changes
-        </CardDescription>
+        <CardDescription>AI-generated commit messages based on your changes</CardDescription>
       </CardHeader>
 
       <CardContent className="space-y-6">
@@ -106,9 +104,7 @@ export function AIAnalysisResult({ isAnalyzing, hasAnalyzed }: AIAnalysisResultP
                 <Sparkles className="h-8 w-8 text-white" />
               </motion.div>
               <p className="text-sm font-medium">Analyzing your changes...</p>
-              <p className="text-xs text-muted-foreground mt-1">
-                This may take a few seconds
-              </p>
+              <p className="text-xs text-muted-foreground mt-1">This may take a few seconds</p>
             </motion.div>
           )}
 
@@ -124,7 +120,7 @@ export function AIAnalysisResult({ isAnalyzing, hasAnalyzed }: AIAnalysisResultP
               </div>
               <p className="text-sm font-medium">Ready to analyze</p>
               <p className="text-xs text-muted-foreground mt-1">
-                Click "Analyze Changes" to get AI suggestions
+                Click &quot;Analyze Changes&quot; to get AI suggestions
               </p>
             </motion.div>
           )}
@@ -142,12 +138,7 @@ export function AIAnalysisResult({ isAnalyzing, hasAnalyzed }: AIAnalysisResultP
                   <Badge variant="outline" className="text-violet-500 border-violet-500/50">
                     {currentSuggestion.confidence}% confident
                   </Badge>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    className="gap-2"
-                    onClick={handleCopy}
-                  >
+                  <Button size="sm" variant="ghost" className="gap-2" onClick={handleCopy}>
                     {copied ? (
                       <>
                         <Check className="h-3 w-3" />
@@ -171,38 +162,36 @@ export function AIAnalysisResult({ isAnalyzing, hasAnalyzed }: AIAnalysisResultP
                   />
                 </code>
 
-                <p className="text-xs text-muted-foreground">
-                  {currentSuggestion.reasoning}
-                </p>
+                <p className="text-xs text-muted-foreground">{currentSuggestion.reasoning}</p>
               </div>
 
               {/* Alternative Suggestions */}
               <div className="space-y-2">
-                <p className="text-xs font-medium text-muted-foreground">
-                  Alternative suggestions
-                </p>
-                {suggestions.map((suggestion, index) => (
-                  index !== selectedSuggestion && (
-                    <motion.button
-                      key={index}
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                      onClick={() => setSelectedSuggestion(index)}
-                      className="group flex w-full items-center justify-between rounded-lg border border-border p-3 text-left transition-all hover:border-violet-500/50 hover:bg-violet-500/5"
-                    >
-                      <div className="flex-1">
-                        <code className="block font-mono text-xs">
-                          {suggestion.type}({suggestion.scope}): {suggestion.message}
-                        </code>
-                        <Badge variant="secondary" className="mt-1 text-xs">
-                          {suggestion.confidence}%
-                        </Badge>
-                      </div>
-                      <ArrowRight className="h-4 w-4 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
-                    </motion.button>
-                  )
-                ))}
+                <p className="text-xs font-medium text-muted-foreground">Alternative suggestions</p>
+                {suggestions.map(
+                  (suggestion, index) =>
+                    index !== selectedSuggestion && (
+                      <motion.button
+                        key={index}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                        onClick={() => setSelectedSuggestion(index)}
+                        className="group flex w-full items-center justify-between rounded-lg border border-border p-3 text-left transition-all hover:border-violet-500/50 hover:bg-violet-500/5"
+                      >
+                        <div className="flex-1">
+                          <code className="block font-mono text-xs">
+                            This is an AI-generated suggestion. Review it carefully before using the
+                            &quot;Create&quot;
+                          </code>
+                          <Badge variant="secondary" className="mt-1 text-xs">
+                            {suggestion.confidence}%
+                          </Badge>
+                        </div>
+                        <ArrowRight className="h-4 w-4 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
+                      </motion.button>
+                    )
+                )}
               </div>
 
               {/* Action Buttons */}

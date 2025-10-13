@@ -8,6 +8,7 @@ import { UseFormReturn } from 'react-hook-form'
 import { Streamdown } from 'streamdown'
 
 interface PRPreviewProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   form: UseFormReturn<any>
 }
 

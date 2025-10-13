@@ -20,13 +20,7 @@ function PRsContent() {
 
   // Show detail view if PR number is in query
   if (prNumber && selectedPR) {
-    return (
-      <PRDetailView
-        key={`${selectedPR}-${prNumber}`}
-        pr={selectedPR}
-        backToPRs={() => setPrNumber(null)}
-      />
-    )
+    return <PRDetailView pr={selectedPR} backToPRs={() => setPrNumber(null)} />
   }
 
   return (

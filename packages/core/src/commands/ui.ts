@@ -75,7 +75,7 @@ export async function startUI(port = 3000) {
 
     try {
       await downloadUI()
-    } catch (error) {
+    } catch {
       console.error(pc.red('\n❌ Failed to start UI'))
       console.error(pc.dim('   Run with DEBUG=* for more details'))
       process.exit(1)

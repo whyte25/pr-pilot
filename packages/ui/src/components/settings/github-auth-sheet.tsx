@@ -1,5 +1,16 @@
 'use client'
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -15,17 +26,6 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet'
 import { Switch } from '@/components/ui/switch'
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog'
 import { useRemoveGitHubToken, useSaveGitHubToken } from '@/hooks/mutations'
 import { useAuthStatus } from '@/hooks/queries'
 import { validateGitHubToken } from '@/services/auth.service'
@@ -231,8 +231,8 @@ export function GitHubAuthSheet() {
                   <AlertDialogHeader>
                     <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                     <AlertDialogDescription>
-                      This will remove your GitHub token from secure storage. You'll need to
-                      re-authenticate to create pull requests and access GitHub features.
+                      This will remove your GitHub token from secure storage. You&apos;ll need to
+                      add it again to use GitHub features.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>

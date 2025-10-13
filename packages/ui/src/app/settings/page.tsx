@@ -1,8 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { ArrowLeft, Github, Shield, Settings } from 'lucide-react'
-import Link from 'next/link'
+import { Github, Shield } from 'lucide-react'
 import { AppShell } from '@/components/layout/app-shell'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -85,7 +84,7 @@ export default function SettingsPage() {
                   <div>
                     <p className="text-sm font-medium">No Data Collection</p>
                     <p className="text-xs text-muted-foreground mt-1">
-                      PR Pilot runs entirely on your machine. We don't collect or store any of your data.
+                      PR Pilot runs entirely on your machine. We don&apos;t collect or store any of your data.
                     </p>
                   </div>
                 </div>

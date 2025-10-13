@@ -2,6 +2,7 @@
 
 import { Clock, GitCommit, GitPullRequest, Loader2, ExternalLink } from 'lucide-react'
 import Link from 'next/link'
+import { Route } from 'next'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -80,7 +81,7 @@ export function RecentActivity() {
                   )}
                   <div className="flex-1 min-w-0">
                     {prUrl ? (
-                      <Link href={prUrl} className="text-sm font-medium leading-tight truncate hover:underline block">
+                      <Link href={prUrl as Route} className="text-sm font-medium leading-tight truncate hover:underline block">
                         {activity.title}
                       </Link>
                     ) : commitUrl ? (
@@ -126,7 +127,7 @@ export function RecentActivity() {
                             <ExternalLink className="h-3 w-3" />
                           </a>
                         ) : (
-                          <Link href={prUrl!}>
+                          <Link href={prUrl! as Route}>
                             <ExternalLink className="h-3 w-3" />
                           </Link>
                         )}

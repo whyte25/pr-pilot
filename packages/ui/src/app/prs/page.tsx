@@ -1,17 +1,29 @@
 'use client'
 
+import { Suspense } from 'react'
 import { motion } from 'framer-motion'
 import { GitPullRequest, Plus, ExternalLink, Loader2, AlertCircle } from 'lucide-react'
 import Link from 'next/link'
+import { useQueryState, parseAsInteger } from 'nuqs'
 import { AppShell } from '@/components/layout/app-shell'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { usePullRequests } from '@/hooks/queries/use-github-queries'
+import { usePullRequests, usePullRequest } from '@/hooks/queries/use-github-queries'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import { PRDetailView } from '@/components/prs/pr-detail-view'
 
-export default function PRsPage() {
+function PRsContent() {
+  const [prNumber, setPrNumber] = useQueryState('number', parseAsInteger)
   const { data: prs, isLoading, error } = usePullRequests('open')
+  const { data: selectedPR, isLoading: prLoading } = usePullRequest(prNumber || 0)
+
+  // Show detail view if PR number is in query
+  if (prNumber && selectedPR) {
+    return <PRDetailView pr={selectedPR} onBack={() => setPrNumber(null)} />
+  }
+
+  // Show list view
 
   return (
     <AppShell>
@@ -80,7 +92,7 @@ export default function PRsPage() {
                 {prs.map((pr) => (
                   <Link
                     key={pr.number}
-                    href={`/prs/${pr.number}`}
+                    href={`/prs?number=${pr.number}`}
                     className="flex items-center justify-between p-4 rounded-lg border hover:bg-muted/50 transition-colors cursor-pointer"
                   >
                     <div className="flex items-start gap-3 flex-1">
@@ -108,5 +120,19 @@ export default function PRsPage() {
         </Card>
       </div>
     </AppShell>
+  )
+}
+
+export default function PRsPage() {
+  return (
+    <Suspense fallback={
+      <AppShell>
+        <div className="flex items-center justify-center min-h-screen">
+          <Loader2 className="h-8 w-8 animate-spin" />
+        </div>
+      </AppShell>
+    }>
+      <PRsContent />
+    </Suspense>
   )
 }

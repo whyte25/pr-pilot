@@ -9,6 +9,7 @@ import {
   Sparkles,
 } from 'lucide-react'
 import Link from 'next/link'
+import { Route } from 'next'
 import { usePathname } from 'next/navigation'
 import {
   Sidebar,
@@ -67,7 +68,7 @@ export function AppSidebar() {
                 return (
                   <SidebarMenuItem key={item.name}>
                     <SidebarMenuButton asChild isActive={isActive} tooltip={item.name}>
-                      <Link href={item.href} className="flex items-center gap-2">
+                      <Link href={item.href as Route} className="flex items-center gap-2">
                         <item.icon />
                         <span>{item.name}</span>
                         {item.premium && (

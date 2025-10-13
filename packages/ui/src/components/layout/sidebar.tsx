@@ -10,6 +10,7 @@ import {
   Sparkles,
 } from 'lucide-react'
 import Link from 'next/link'
+import { Route } from 'next'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 
@@ -45,7 +46,7 @@ export function Sidebar() {
         {navigation.map((item) => {
           const isActive = pathname === item.href
           return (
-            <Link key={item.name} href={item.href}>
+            <Link key={item.name} href={item.href as Route}>
               <motion.div
                 whileHover={{ x: 4 }}
                 whileTap={{ scale: 0.98 }}
@@ -76,7 +77,7 @@ export function Sidebar() {
         {bottomNavigation.map((item) => {
           const isActive = pathname === item.href
           return (
-            <Link key={item.name} href={item.href}>
+            <Link key={item.name} href={item.href as Route}>
               <div
                 className={cn(
                   'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',

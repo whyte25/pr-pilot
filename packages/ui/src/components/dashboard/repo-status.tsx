@@ -1,30 +1,31 @@
 'use client'
 
-import { GitBranch, Loader2, AlertCircle, CheckCircle2, FileEdit } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useGitStatus, useRepoInfo } from '@/hooks/queries/use-git-queries'
+import { CheckCircle2, FileEdit, GitBranch, Loader2 } from 'lucide-react'
+import { Button } from '../ui/button'
 
 export function RepoStatus() {
   const { data: status, isLoading: statusLoading } = useGitStatus()
   const { data: repoInfo, isLoading: repoLoading } = useRepoInfo()
 
   const isLoading = statusLoading || repoLoading
-  const hasChanges = status && (
-    status.modified.length > 0 ||
-    status.created.length > 0 ||
-    status.deleted.length > 0 ||
-    status.not_added.length > 0 ||
-    status.staged.length > 0 ||
-    status.files.length > 0
-  )
-  const totalChanges = status ? (
-    status.modified.length +
-    status.created.length +
-    status.deleted.length +
-    status.not_added.length +
-    status.staged.length
-  ) : 0
+  const hasChanges =
+    status &&
+    (status.modified.length > 0 ||
+      status.created.length > 0 ||
+      status.deleted.length > 0 ||
+      status.not_added.length > 0 ||
+      status.staged.length > 0 ||
+      status.files.length > 0)
+  const totalChanges = status
+    ? status.modified.length +
+      status.created.length +
+      status.deleted.length +
+      status.not_added.length +
+      status.staged.length
+    : 0
 
   return (
     <Card>
@@ -54,7 +55,9 @@ export function RepoStatus() {
 
             {/* Status */}
             <div className="flex flex-col items-center justify-center py-6 text-center">
-              <div className={`rounded-full p-3 mb-3 ${hasChanges ? 'bg-orange-500/10' : 'bg-green-500/10'}`}>
+              <div
+                className={`rounded-full p-3 mb-3 ${hasChanges ? 'bg-orange-500/10' : 'bg-green-500/10'}`}
+              >
                 {hasChanges ? (
                   <FileEdit className="h-6 w-6 text-orange-500" />
                 ) : (
@@ -62,7 +65,9 @@ export function RepoStatus() {
                 )}
               </div>
               <p className="text-sm font-medium">
-                {hasChanges ? `${totalChanges} ${totalChanges === 1 ? 'change' : 'changes'}` : 'Working tree clean'}
+                {hasChanges
+                  ? `${totalChanges} ${totalChanges === 1 ? 'change' : 'changes'}`
+                  : 'Working tree clean'}
               </p>
               <p className="text-xs text-muted-foreground mt-1">
                 {hasChanges ? 'You have uncommitted changes' : 'No changes to commit'}
@@ -76,27 +81,47 @@ export function RepoStatus() {
                 {totalChanges <= 5 ? (
                   <div className="space-y-2">
                     {status.modified.map((file) => (
-                      <div key={file} className="flex items-center justify-between text-xs p-2 rounded bg-muted/30">
+                      <div
+                        key={file}
+                        className="flex items-center justify-between text-xs p-2 rounded bg-muted/30"
+                      >
                         <span className="font-mono truncate flex-1">{file}</span>
-                        <Badge variant="secondary" className="ml-2">M</Badge>
+                        <Badge variant="secondary" className="ml-2">
+                          M
+                        </Badge>
                       </div>
                     ))}
                     {status.created.map((file) => (
-                      <div key={file} className="flex items-center justify-between text-xs p-2 rounded bg-muted/30">
+                      <div
+                        key={file}
+                        className="flex items-center justify-between text-xs p-2 rounded bg-muted/30"
+                      >
                         <span className="font-mono truncate flex-1">{file}</span>
-                        <Badge variant="secondary" className="ml-2">A</Badge>
+                        <Badge variant="secondary" className="ml-2">
+                          A
+                        </Badge>
                       </div>
                     ))}
                     {status.deleted.map((file) => (
-                      <div key={file} className="flex items-center justify-between text-xs p-2 rounded bg-muted/30">
+                      <div
+                        key={file}
+                        className="flex items-center justify-between text-xs p-2 rounded bg-muted/30"
+                      >
                         <span className="font-mono truncate flex-1">{file}</span>
-                        <Badge variant="secondary" className="ml-2">D</Badge>
+                        <Badge variant="secondary" className="ml-2">
+                          D
+                        </Badge>
                       </div>
                     ))}
                     {status.not_added.map((file) => (
-                      <div key={file} className="flex items-center justify-between text-xs p-2 rounded bg-muted/30">
+                      <div
+                        key={file}
+                        className="flex items-center justify-between text-xs p-2 rounded bg-muted/30"
+                      >
                         <span className="font-mono truncate flex-1">{file}</span>
-                        <Badge variant="secondary" className="ml-2">U</Badge>
+                        <Badge variant="secondary" className="ml-2">
+                          U
+                        </Badge>
                       </div>
                     ))}
                   </div>

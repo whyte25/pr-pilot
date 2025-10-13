@@ -1,15 +1,15 @@
 'use client'
 
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import { ChangedFiles } from '@/components/commits/changed-files'
 import { CommitForm } from '@/components/commits/commit-form'
 import { AppShell } from '@/components/layout/app-shell'
 import { Button } from '@/components/ui/button'
 import { motion } from 'framer-motion'
-import { ArrowLeft, Sparkles } from 'lucide-react'
+import { ArrowLeft, Sparkles, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 
-export default function NewCommitPage() {
+function NewCommitContent() {
   const [selectedFiles, setSelectedFiles] = useState<string[]>([])
 
   return (
@@ -63,5 +63,19 @@ export default function NewCommitPage() {
         </div>
       </div>
     </AppShell>
+  )
+}
+
+export default function NewCommitPage() {
+  return (
+    <Suspense fallback={
+      <AppShell>
+        <div className="flex items-center justify-center min-h-screen">
+          <Loader2 className="h-8 w-8 animate-spin" />
+        </div>
+      </AppShell>
+    }>
+      <NewCommitContent />
+    </Suspense>
   )
 }

@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { GitCommit, GitPullRequest, Sparkles } from 'lucide-react'
+import { Route } from 'next'
 import Link from 'next/link'
 
 const actions = [
@@ -47,15 +48,19 @@ export function QuickActions() {
           }}
           className="h-full"
         >
-          <Link href={action.href} className="block h-full">
+          <Link href={action.href as Route} className="block h-full">
             <div className="group relative flex h-full flex-col overflow-hidden rounded-xl border border-border/50 bg-card p-6 transition-all hover:border-border hover:shadow-lg hover:shadow-primary/5">
               {/* Gradient Background */}
-              <div className={`absolute inset-0 bg-gradient-to-br ${action.gradient} opacity-0 transition-opacity group-hover:opacity-100`} />
-              
+              <div
+                className={`absolute inset-0 bg-gradient-to-br ${action.gradient} opacity-0 transition-opacity group-hover:opacity-100`}
+              />
+
               {/* Content */}
               <div className="relative z-10 flex flex-1 flex-col space-y-3">
                 <div className="flex items-start justify-between">
-                  <div className={`rounded-lg bg-background p-2.5 ring-1 ring-border/50 ${action.iconColor}`}>
+                  <div
+                    className={`rounded-lg bg-background p-2.5 ring-1 ring-border/50 ${action.iconColor}`}
+                  >
                     <action.icon className="h-5 w-5" />
                   </div>
                   {action.badge && (

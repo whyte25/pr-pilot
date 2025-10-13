@@ -1,5 +1,6 @@
 'use client'
 
+import { Suspense } from 'react'
 import { motion } from 'framer-motion'
 import { GitCommit, Plus, Loader2, AlertCircle, ExternalLink } from 'lucide-react'
 import Link from 'next/link'
@@ -23,7 +24,7 @@ import { formatDistanceToNow } from 'date-fns'
 
 const ITEMS_PER_PAGE = 10
 
-export default function CommitsPage() {
+function CommitsContent() {
   const [page, setPage] = useQueryState('page', parseAsInteger.withDefault(1))
   const { data: commits, isLoading, error } = useCommitHistory(100) // Fetch more to paginate
   const { data: repo } = useRepository()
@@ -198,5 +199,19 @@ export default function CommitsPage() {
         </Card>
       </div>
     </AppShell>
+  )
+}
+
+export default function CommitsPage() {
+  return (
+    <Suspense fallback={
+      <AppShell>
+        <div className="flex items-center justify-center min-h-screen">
+          <Loader2 className="h-8 w-8 animate-spin" />
+        </div>
+      </AppShell>
+    }>
+      <CommitsContent />
+    </Suspense>
   )
 }

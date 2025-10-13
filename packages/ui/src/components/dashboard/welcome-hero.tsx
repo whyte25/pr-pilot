@@ -13,7 +13,7 @@ export function WelcomeHero() {
     >
       {/* Ambient Glow */}
       <div className="absolute inset-0 bg-gradient-to-tr from-primary/5 via-transparent to-violet-500/5" />
-      
+
       {/* Content */}
       <div className="relative z-10 flex items-start justify-between">
         <div className="space-y-3">
@@ -25,9 +25,7 @@ export function WelcomeHero() {
             >
               <Sparkles className="h-6 w-6 text-primary" />
             </motion.div>
-            <h1 className="text-3xl font-bold tracking-tight">
-              Welcome back
-            </h1>
+            <h1 className="text-3xl font-bold tracking-tight">Welcome back</h1>
           </div>
 
           <div className="flex items-center gap-3 text-muted-foreground">
@@ -37,9 +35,7 @@ export function WelcomeHero() {
             </div>
             <div className="flex items-center gap-1.5 text-sm">
               <span className="text-muted-foreground/60">on</span>
-              <code className="rounded bg-muted px-2 py-0.5 font-mono text-xs">
-                main
-              </code>
+              <code className="rounded bg-muted px-2 py-0.5 font-mono text-xs">main</code>
             </div>
           </div>
         </div>

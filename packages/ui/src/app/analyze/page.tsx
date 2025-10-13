@@ -99,9 +99,7 @@ export default function AnalyzePage() {
         </motion.div>
 
         {/* Analysis Stats */}
-        <AnimatePresence>
-          {hasAnalyzed && <AnalysisStats />}
-        </AnimatePresence>
+        <AnimatePresence>{hasAnalyzed && <AnalysisStats />}</AnimatePresence>
 
         {/* Two Column Layout */}
         <div className="grid gap-6 lg:grid-cols-2">
@@ -136,9 +134,7 @@ export default function AnalyzePage() {
                 <Zap className="h-5 w-5 text-violet-500" />
                 Premium AI Features
               </CardTitle>
-              <CardDescription>
-                Unlock the full power of AI-assisted Git workflows
-              </CardDescription>
+              <CardDescription>Unlock the full power of AI-assisted Git workflows</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid gap-4 md:grid-cols-3">

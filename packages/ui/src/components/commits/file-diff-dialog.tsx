@@ -92,12 +92,15 @@ export function FileDiffDialog({ filePath, onClose }: FileDiffDialogProps) {
                     const isDeletion = line.startsWith('-') && !line.startsWith('---')
                     const isChunkHeader = line.startsWith('@@')
                     const isFileHeader =
-                      line.startsWith('+++') || line.startsWith('---') || line.startsWith('diff') || line.startsWith('new file')
+                      line.startsWith('+++') ||
+                      line.startsWith('---') ||
+                      line.startsWith('diff') ||
+                      line.startsWith('new file')
 
                     // Calculate line numbers
                     let oldLineNum = ''
                     let newLineNum = ''
-                    
+
                     if (!isFileHeader && !isChunkHeader) {
                       if (isDeletion) {
                         oldLineNum = String(index)
@@ -138,7 +141,7 @@ export function FileDiffDialog({ filePath, onClose }: FileDiffDialogProps) {
                             </span>
                           </div>
                         )}
-                        
+
                         {/* Diff indicator */}
                         <div
                           className={`

@@ -1,14 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import {
-  GitBranch,
-  GitCommit,
-  GitPullRequest,
-  Home,
-  Settings,
-  Sparkles,
-} from 'lucide-react'
+import { GitBranch, GitCommit, GitPullRequest, Home, Settings, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 import { Route } from 'next'
 import { usePathname } from 'next/navigation'
@@ -21,9 +14,7 @@ const navigation = [
   { name: 'Branches', href: '/branches', icon: GitBranch },
 ]
 
-const bottomNavigation = [
-  { name: 'Settings', href: '/settings', icon: Settings },
-]
+const bottomNavigation = [{ name: 'Settings', href: '/settings', icon: Settings }]
 
 export function Sidebar() {
   const pathname = usePathname()

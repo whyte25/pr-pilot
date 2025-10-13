@@ -12,14 +12,9 @@ export default function SettingsPage() {
   return (
     <AppShell>
       <div className="flex flex-col gap-6 p-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
-          <p className="text-muted-foreground">
-            Configure PR Pilot settings and integrations
-          </p>
+          <p className="text-muted-foreground">Configure PR Pilot settings and integrations</p>
         </motion.div>
 
         {/* GitHub Integration */}
@@ -64,9 +59,7 @@ export default function SettingsPage() {
                 <Shield className="h-5 w-5" />
                 Security
               </CardTitle>
-              <CardDescription>
-                Your data security and privacy settings
-              </CardDescription>
+              <CardDescription>Your data security and privacy settings</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -75,7 +68,8 @@ export default function SettingsPage() {
                   <div>
                     <p className="text-sm font-medium">Secure Token Storage</p>
                     <p className="text-xs text-muted-foreground mt-1">
-                      All tokens are stored in httpOnly cookies, preventing access from client-side JavaScript.
+                      All tokens are stored in httpOnly cookies, preventing access from client-side
+                      JavaScript.
                     </p>
                   </div>
                 </div>
@@ -84,7 +78,8 @@ export default function SettingsPage() {
                   <div>
                     <p className="text-sm font-medium">No Data Collection</p>
                     <p className="text-xs text-muted-foreground mt-1">
-                      PR Pilot runs entirely on your machine. We don&apos;t collect or store any of your data.
+                      PR Pilot runs entirely on your machine. We don&apos;t collect or store any of
+                      your data.
                     </p>
                   </div>
                 </div>

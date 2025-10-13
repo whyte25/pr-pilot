@@ -1,13 +1,6 @@
 'use client'
 
-import {
-  GitBranch,
-  GitCommit,
-  GitPullRequest,
-  Home,
-  Settings,
-  Sparkles,
-} from 'lucide-react'
+import { GitBranch, GitCommit, GitPullRequest, Home, Settings, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 import { Route } from 'next'
 import { usePathname } from 'next/navigation'
@@ -48,9 +41,7 @@ export function AppSidebar() {
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">PR Pilot</span>
-                  <span className="truncate text-xs text-muted-foreground">
-                    Your PR autopilot
-                  </span>
+                  <span className="truncate text-xs text-muted-foreground">Your PR autopilot</span>
                 </div>
               </Link>
             </SidebarMenuButton>

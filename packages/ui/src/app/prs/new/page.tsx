@@ -54,9 +54,7 @@ export default function NewPRPage() {
             </Button>
             <div>
               <h1 className="text-3xl font-bold tracking-tight">Create Pull Request</h1>
-              <p className="text-muted-foreground">
-                Open a pull request from your current branch
-              </p>
+              <p className="text-muted-foreground">Open a pull request from your current branch</p>
             </div>
           </div>
 

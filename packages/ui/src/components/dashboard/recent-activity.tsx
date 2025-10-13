@@ -64,11 +64,15 @@ export function RecentActivity() {
         ) : (
           <div className="space-y-3">
             {activities.map((activity, index) => {
-              const commitUrl = activity.type === 'commit' && repo && 'hash' in activity
-                ? `https://github.com/${repo.fullName}/commit/${activity.hash}`
-                : null
-              const prUrl = activity.type === 'pr' ? `/prs/${'number' in activity ? activity.number : ''}` : null
-              
+              const commitUrl =
+                activity.type === 'commit' && repo && 'hash' in activity
+                  ? `https://github.com/${repo.fullName}/commit/${activity.hash}`
+                  : null
+              const prUrl =
+                activity.type === 'pr'
+                  ? `/prs/${'number' in activity ? activity.number : ''}`
+                  : null
+
               return (
                 <div
                   key={`${activity.type}-${index}`}
@@ -81,7 +85,10 @@ export function RecentActivity() {
                   )}
                   <div className="flex-1 min-w-0">
                     {prUrl ? (
-                      <Link href={prUrl as Route} className="text-sm font-medium leading-tight truncate hover:underline block">
+                      <Link
+                        href={prUrl as Route}
+                        className="text-sm font-medium leading-tight truncate hover:underline block"
+                      >
                         {activity.title}
                       </Link>
                     ) : commitUrl ? (

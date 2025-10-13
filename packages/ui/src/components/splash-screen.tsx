@@ -32,7 +32,7 @@ export function SplashScreen() {
               transition={{ duration: 1 }}
               className="absolute inset-0 bg-gradient-to-br from-primary/20 via-violet-500/10 to-background"
             />
-            
+
             {/* Animated circles */}
             <motion.div
               animate={{
@@ -77,7 +77,7 @@ export function SplashScreen() {
               <div className="flex h-24 w-24 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-violet-600 shadow-2xl shadow-primary/50">
                 <Sparkles className="h-12 w-12 text-primary-foreground" />
               </div>
-              
+
               {/* Glow effect */}
               <motion.div
                 animate={{
@@ -99,12 +99,8 @@ export function SplashScreen() {
               transition={{ delay: 0.3, duration: 0.6 }}
               className="text-center"
             >
-              <h1 className="text-4xl font-bold tracking-tight">
-                PR Pilot
-              </h1>
-              <p className="mt-2 text-muted-foreground">
-                Your PR autopilot
-              </p>
+              <h1 className="text-4xl font-bold tracking-tight">PR Pilot</h1>
+              <p className="mt-2 text-muted-foreground">Your PR autopilot</p>
             </motion.div>
 
             {/* Loading bar */}

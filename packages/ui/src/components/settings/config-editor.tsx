@@ -5,7 +5,13 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import { useConfigStore } from '@/store/config-store'
 import { motion } from 'framer-motion'
@@ -26,26 +32,38 @@ export function ConfigEditor() {
 
   const handleSaveScopes = () => {
     if (customScopes.trim()) {
-      const scopesArray = customScopes.split(',').map((s) => s.trim()).filter(Boolean)
+      const scopesArray = customScopes
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean)
       config.updateCommit({ scopes: scopesArray })
       toast.success('Custom scopes saved')
     }
   }
 
   const handleSaveProtectedBranches = () => {
-    const branchesArray = protectedBranches.split(',').map((b) => b.trim()).filter(Boolean)
+    const branchesArray = protectedBranches
+      .split(',')
+      .map((b) => b.trim())
+      .filter(Boolean)
     config.updateGit({ protectedBranches: branchesArray })
     toast.success('Protected branches saved')
   }
 
   const handleSaveLabels = () => {
-    const labelsArray = labels.split(',').map((l) => l.trim()).filter(Boolean)
+    const labelsArray = labels
+      .split(',')
+      .map((l) => l.trim())
+      .filter(Boolean)
     config.updatePr({ labels: labelsArray })
     toast.success('Default labels saved')
   }
 
   const handleSaveReviewers = () => {
-    const reviewersArray = reviewers.split(',').map((r) => r.trim()).filter(Boolean)
+    const reviewersArray = reviewers
+      .split(',')
+      .map((r) => r.trim())
+      .filter(Boolean)
     config.updatePr({ reviewers: reviewersArray })
     toast.success('Default reviewers saved')
   }
@@ -76,9 +94,7 @@ export function ConfigEditor() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="conventional">
-                    Conventional (type(scope): message)
-                  </SelectItem>
+                  <SelectItem value="conventional">Conventional (type(scope): message)</SelectItem>
                   <SelectItem value="simple">Simple (message only)</SelectItem>
                 </SelectContent>
               </Select>
@@ -161,7 +177,11 @@ export function ConfigEditor() {
       </motion.div>
 
       {/* Git Settings */}
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+      >
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -213,7 +233,11 @@ export function ConfigEditor() {
       </motion.div>
 
       {/* PR Settings */}
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+      >
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -240,9 +264,7 @@ export function ConfigEditor() {
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
                 <Label>Create as Draft by Default</Label>
-                <p className="text-xs text-muted-foreground">
-                  PRs will be created as drafts
-                </p>
+                <p className="text-xs text-muted-foreground">PRs will be created as drafts</p>
               </div>
               <Switch
                 checked={config.pr.draft}
@@ -308,7 +330,11 @@ export function ConfigEditor() {
       </motion.div>
 
       {/* Hooks Settings */}
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+      >
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -322,9 +348,7 @@ export function ConfigEditor() {
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
                 <Label>Run Linter</Label>
-                <p className="text-xs text-muted-foreground">
-                  Run linter before commits
-                </p>
+                <p className="text-xs text-muted-foreground">Run linter before commits</p>
               </div>
               <Switch
                 checked={config.hooks.lint !== false}
@@ -336,9 +360,7 @@ export function ConfigEditor() {
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
                 <Label>Run Formatter</Label>
-                <p className="text-xs text-muted-foreground">
-                  Run formatter before commits
-                </p>
+                <p className="text-xs text-muted-foreground">Run formatter before commits</p>
               </div>
               <Switch
                 checked={config.hooks.format !== false}
@@ -350,9 +372,7 @@ export function ConfigEditor() {
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
                 <Label>Run Tests</Label>
-                <p className="text-xs text-muted-foreground">
-                  Run tests before commits
-                </p>
+                <p className="text-xs text-muted-foreground">Run tests before commits</p>
               </div>
               <Switch
                 checked={config.hooks.test !== false}
@@ -364,7 +384,11 @@ export function ConfigEditor() {
       </motion.div>
 
       {/* Reset Button */}
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+      >
         <Card className="border-destructive/50">
           <CardHeader>
             <CardTitle className="text-destructive">Danger Zone</CardTitle>

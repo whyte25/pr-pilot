@@ -1,8 +1,8 @@
-import { AppShell } from "@/components/layout/app-shell";
-import { WelcomeHero } from "@/components/dashboard/welcome-hero";
-import { QuickActions } from "@/components/dashboard/quick-actions";
-import { RepoStatus } from "@/components/dashboard/repo-status";
-import { RecentActivity } from "@/components/dashboard/recent-activity";
+import { AppShell } from '@/components/layout/app-shell'
+import { WelcomeHero } from '@/components/dashboard/welcome-hero'
+import { QuickActions } from '@/components/dashboard/quick-actions'
+import { RepoStatus } from '@/components/dashboard/repo-status'
+import { RecentActivity } from '@/components/dashboard/recent-activity'
 
 export default function Home() {
   return (
@@ -24,5 +24,5 @@ export default function Home() {
         </div>
       </div>
     </AppShell>
-  );
+  )
 }

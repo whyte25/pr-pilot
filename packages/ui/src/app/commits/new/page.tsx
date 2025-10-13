@@ -68,13 +68,15 @@ function NewCommitContent() {
 
 export default function NewCommitPage() {
   return (
-    <Suspense fallback={
-      <AppShell>
-        <div className="flex items-center justify-center min-h-screen">
-          <Loader2 className="h-8 w-8 animate-spin" />
-        </div>
-      </AppShell>
-    }>
+    <Suspense
+      fallback={
+        <AppShell>
+          <div className="flex items-center justify-center min-h-screen">
+            <Loader2 className="h-8 w-8 animate-spin" />
+          </div>
+        </AppShell>
+      }
+    >
       <NewCommitContent />
     </Suspense>
   )

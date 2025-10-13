@@ -7,7 +7,12 @@ import { cn } from '@/lib/utils'
 
 const mockFiles = [
   { path: 'src/app/analyze/page.tsx', status: 'A', additions: 189, deletions: 0 },
-  { path: 'src/components/analyze/ai-analysis-result.tsx', status: 'A', additions: 156, deletions: 0 },
+  {
+    path: 'src/components/analyze/ai-analysis-result.tsx',
+    status: 'A',
+    additions: 156,
+    deletions: 0,
+  },
   { path: 'src/components/commits/commit-form.tsx', status: 'M', additions: 8, deletions: 12 },
   { path: 'src/components/prs/pr-form.tsx', status: 'M', additions: 6, deletions: 8 },
 ]

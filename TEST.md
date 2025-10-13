@@ -3,10 +3,12 @@
 ## Using npm scripts (recommended)
 
 ```bash
-pnpm test:core    # Test CLI
-pnpm test:ui      # Test UI on port 3000
-pnpm test:mcp     # Test MCP server
+pnpm test:core    # Test CLI (rebuilds every time)
+pnpm test:ui      # Test UI (builds once, then reuses)
+pnpm test:mcp     # Test MCP server (rebuilds every time)
 ```
+
+**Note:** UI only builds on first run. Subsequent runs are instant.
 
 ## Using test script directly
 

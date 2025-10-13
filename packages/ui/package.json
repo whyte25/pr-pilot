@@ -8,9 +8,9 @@
   },
   "files": [
     "bin",
-    ".next",
-    "public",
-    "src"
+    ".next/standalone",
+    ".next/static",
+    "public"
   ],
   "scripts": {
     "dev": "next dev --turbopack",

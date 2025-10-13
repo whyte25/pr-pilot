@@ -23,7 +23,13 @@ case "${1:-core}" in
   ui)
     echo "  Testing @pr-pilot/ui"
     cd "$ROOT/packages/ui"
-    pnpm run build
+    
+    # Only build if .next doesn't exist
+    if [ ! -d ".next" ]; then
+      echo "  Building UI (first time)..."
+      pnpm run build
+    fi
+    
     chmod +x bin/pr-pilot-ui.js
     # Pass all remaining args (e.g., --port=4000)
     shift

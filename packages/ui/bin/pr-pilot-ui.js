@@ -3,17 +3,27 @@
 /**
  * PR Pilot UI - Web interface launcher
  * 
- * Usage: pr-pilot-ui [port]
- * Example: pr-pilot-ui 4000
+ * Usage: pr-pilot-ui [--port=PORT]
+ * Example: pr-pilot-ui --port=4000
  */
 
 import { spawn } from 'child_process'
+import { existsSync } from 'fs'
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 const rootDir = join(__dirname, '..')
+
+// Check if build exists
+const nextDir = join(rootDir, '.next')
+if (!existsSync(nextDir)) {
+  console.error('❌ UI not built yet!')
+  console.error('   Run: pnpm run build')
+  console.error('   Or for development: pnpm run dev')
+  process.exit(1)
+}
 
 // Parse arguments
 let port = '3000'

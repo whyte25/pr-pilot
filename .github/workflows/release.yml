@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - dev
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
@@ -45,7 +46,8 @@ jobs:
         id: changesets
         uses: changesets/action@v1
         with:
-          publish: pnpm run release
+          # Only publish on main, create version PR on dev
+          publish: ${{ github.ref == 'refs/heads/main' && 'pnpm run release' || '' }}
           version: pnpm run version-packages
           commit: 'chore(release): version packages'
           title: 'chore(release): version packages'

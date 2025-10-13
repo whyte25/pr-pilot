@@ -23,6 +23,7 @@ export default {
       'always',
       [
         'cli',
+        'repo',
         'config',
         'github',
         'prompts',

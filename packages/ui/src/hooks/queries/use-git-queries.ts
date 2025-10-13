@@ -1,6 +1,29 @@
 import { useQuery } from '@tanstack/react-query'
-import { getFiles, getBranch, getHistory, getRepo, getDiff } from '@/services/git.actions'
+import {
+  getStatus,
+  getFiles,
+  getBranch,
+  getHistory,
+  getRepo,
+  getDiff,
+} from '@/services/git.actions'
 import { queryKeys } from '@/constants/query-keys'
+
+/**
+ * Hook to get git status
+ */
+export function useGitStatus() {
+  return useQuery({
+    queryKey: queryKeys.git.status(),
+    queryFn: async () => {
+      const result = await getStatus()
+      if (!result.success) {
+        throw new Error(result.error)
+      }
+      return result.data
+    },
+  })
+}
 
 /**
  * Hook to get changed files

@@ -56,7 +56,7 @@ export function getGit(baseDir?: string): SimpleGit {
  * Get the current Git status
  */
 export async function getGitStatus(baseDir?: string): Promise<StatusResult> {
-  const gitInstance = getGit(baseDir)
+  const gitInstance = await getGitAsync(baseDir)
   return await gitInstance.status()
 }
 

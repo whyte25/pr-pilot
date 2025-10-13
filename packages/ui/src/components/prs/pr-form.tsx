@@ -30,6 +30,7 @@ import {
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { Badge } from '@/components/ui/badge'
 import { useCreatePullRequest } from '@/hooks/mutations/use-github-mutations'
 import { useRepoInfo } from '@/hooks/queries/use-git-queries'
 import { useBranches, useRepository } from '@/hooks/queries/use-github-queries'
@@ -50,6 +51,8 @@ const formSchema = z.object({
   }),
   changeTypes: z.array(z.string()).min(1, 'Select at least one type of change'),
   draft: z.boolean(),
+  labels: z.array(z.string()).optional(),
+  reviewers: z.array(z.string()).optional(),
 })
 
 const CHANGE_TYPES = [
@@ -81,6 +84,8 @@ export function PRForm({ form }: PRFormProps) {
     form.setValue('baseBranch', baseBranch)
     form.setValue('headBranch', repoInfo.branch)
     form.setValue('draft', config.pr.draft)
+    form.setValue('labels', config.pr.labels)
+    form.setValue('reviewers', config.pr.reviewers)
     defaultsSet.current = true
   }
 
@@ -317,6 +322,52 @@ export function PRForm({ form }: PRFormProps) {
                 </FormItem>
               )}
             />
+
+            {/* Labels Field */}
+            {config.pr.labels.length > 0 && (
+              <FormField
+                control={form.control}
+                name="labels"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Labels (from config)</FormLabel>
+                    <div className="flex flex-wrap gap-2">
+                      {config.pr.labels.map((label) => (
+                        <Badge key={label} variant="secondary">
+                          {label}
+                        </Badge>
+                      ))}
+                    </div>
+                    <FormDescription>
+                      Default labels from your settings
+                    </FormDescription>
+                  </FormItem>
+                )}
+              />
+            )}
+
+            {/* Reviewers Field */}
+            {config.pr.reviewers.length > 0 && (
+              <FormField
+                control={form.control}
+                name="reviewers"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Reviewers (from config)</FormLabel>
+                    <div className="flex flex-wrap gap-2">
+                      {config.pr.reviewers.map((reviewer) => (
+                        <Badge key={reviewer} variant="outline">
+                          @{reviewer}
+                        </Badge>
+                      ))}
+                    </div>
+                    <FormDescription>
+                      Default reviewers from your settings
+                    </FormDescription>
+                  </FormItem>
+                )}
+              />
+            )}
 
             {/* Draft Checkbox */}
             <FormField

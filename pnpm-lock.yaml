@@ -253,6 +253,9 @@ importers:
       react-hook-form:
         specifier: ^7.65.0
         version: 7.65.0(react@19.1.0)
+      shiki:
+        specifier: ^3.13.0
+        version: 3.13.0
       simple-git:
         specifier: ^3.27.0
         version: 3.28.0

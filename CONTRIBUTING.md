@@ -348,15 +348,44 @@ Include:
 
 ## Release Process
 
-Releases are automated via CI when tags are pushed:
+We use [Changesets](https://github.com/changesets/changesets) for versioning and publishing.
+
+### Creating a Changeset
+
+When you make changes that should trigger a release:
 
 ```bash
-# Maintainers only
+# Create a changeset
 pnpm changeset
-pnpm changeset version
-git commit -am "chore(release): version packages"
-git push
-git push --tags
+
+# Follow the prompts:
+# 1. Select packages to bump (core, mcp-server)
+# 2. Choose version bump type:
+#    - patch: Bug fixes (1.0.0 → 1.0.1)
+#    - minor: New features (1.0.0 → 1.1.0)
+#    - major: Breaking changes (1.0.0 → 2.0.0)
+# 3. Write a summary of changes
+
+# Commit the changeset
+git add .changeset/
+git commit -m "chore: add changeset for feature X"
+```
+
+### Release Workflow
+
+1. **Push to main** — Commits with changesets trigger the release workflow
+2. **Version PR created** — GitHub Action creates a "Version Packages" PR
+3. **Review and merge** — Check the version bumps and changelog
+4. **Auto-publish** — Merging the PR publishes to npm automatically
+
+### Manual Release (Maintainers)
+
+```bash
+# Version packages
+pnpm run version-packages
+
+# Publish to npm
+pnpm run release
 ```
 
 ## Questions?

@@ -2,7 +2,7 @@
 
 Web interface for PR Pilot. Provides a visual workflow for creating commits and pull requests with real-time Git integration.
 
-**Status:** 🚧 In Beta
+**Status:** 🧪 Beta (Available for Testing)
 
 ## Overview
 

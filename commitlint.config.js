@@ -39,6 +39,7 @@ export default {
         'vscode',
         'ui',
         'mcp',
+        'ci',
       ],
     ],
   },

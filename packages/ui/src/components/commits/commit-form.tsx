@@ -27,9 +27,11 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
+import { useCreateCommit } from '@/hooks/mutations'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { motion } from 'framer-motion'
 import { GitCommit, Zap } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import * as z from 'zod'
@@ -58,7 +60,14 @@ const formSchema = z.object({
   breaking: z.boolean(),
 })
 
-export function CommitForm() {
+interface CommitFormProps {
+  selectedFiles?: string[]
+}
+
+export function CommitForm({ selectedFiles = [] }: CommitFormProps) {
+  const router = useRouter()
+  const createCommit = useCreateCommit()
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -74,10 +83,36 @@ export function CommitForm() {
   const commitMessage = `${watchedValues.type}${watchedValues.scope ? `(${watchedValues.scope})` : ''}${watchedValues.breaking ? '!' : ''}: ${watchedValues.message || ''}`
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    toast.success('Commit created successfully!', {
-      description: commitMessage,
-    })
-    console.log(values)
+    if (selectedFiles.length === 0) {
+      toast.error('No files selected', {
+        description: 'Please select at least one file to commit',
+      })
+      return
+    }
+
+    const fullMessage = `${values.type}${values.scope ? `(${values.scope})` : ''}${values.breaking ? '!' : ''}: ${values.message}`
+    const bodyText = values.body || ''
+
+    createCommit.mutate(
+      {
+        message: bodyText ? `${fullMessage}\n\n${bodyText}` : fullMessage,
+        files: selectedFiles,
+      },
+      {
+        onSuccess: () => {
+          toast.success('Commit created successfully!', {
+            description: commitMessage,
+          })
+          form.reset()
+          router.push('/commits')
+        },
+        onError: (error) => {
+          toast.error('Failed to create commit', {
+            description: error.message,
+          })
+        },
+      }
+    )
   }
 
   return (
@@ -210,12 +245,35 @@ export function CommitForm() {
           </CardContent>
 
           <CardFooter className="flex gap-2 mt-3">
-            <Button type="button" variant="outline" className="flex-1">
+            <Button
+              type="button"
+              variant="outline"
+              className="flex-1"
+              onClick={() => router.push('/commits')}
+            >
               Cancel
             </Button>
-            <Button type="submit" className="flex-1 gap-2">
-              <GitCommit className="h-4 w-4" />
-              Create Commit
+            <Button
+              type="submit"
+              className="flex-1 gap-2"
+              disabled={createCommit.isPending || selectedFiles.length === 0}
+            >
+              {createCommit.isPending ? (
+                <>
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                  >
+                    <GitCommit className="h-4 w-4" />
+                  </motion.div>
+                  Creating...
+                </>
+              ) : (
+                <>
+                  <GitCommit className="h-4 w-4" />
+                  Create Commit
+                </>
+              )}
             </Button>
           </CardFooter>
         </form>

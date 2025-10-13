@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { ChangedFiles } from '@/components/commits/changed-files'
 import { CommitForm } from '@/components/commits/commit-form'
 import { AppShell } from '@/components/layout/app-shell'
@@ -9,6 +10,8 @@ import { ArrowLeft, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 
 export default function NewCommitPage() {
+  const [selectedFiles, setSelectedFiles] = useState<string[]>([])
+
   return (
     <AppShell>
       <div className="flex flex-col gap-6 p-8">
@@ -46,7 +49,7 @@ export default function NewCommitPage() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.1 }}
           >
-            <ChangedFiles />
+            <ChangedFiles onSelectionChange={setSelectedFiles} />
           </motion.div>
 
           {/* Right: Commit Form */}
@@ -55,7 +58,7 @@ export default function NewCommitPage() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <CommitForm />
+            <CommitForm selectedFiles={selectedFiles} />
           </motion.div>
         </div>
       </div>

@@ -1,5 +1,4 @@
-import simpleGit, { SimpleGit, StatusResult, DiffResult } from 'simple-git'
-import path from 'path'
+import simpleGit, { SimpleGit, StatusResult } from 'simple-git'
 
 let git: SimpleGit | null = null
 let gitRoot: string | null = null

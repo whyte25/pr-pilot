@@ -1,38 +1,50 @@
 #!/bin/bash
+set -e
 
-# PR Pilot Local Test Script
-# Usage: ./test-local.sh [project-path]
+# Quick test script for PR Pilot packages
+# Usage: ./test-local.sh [command]
+#
+# Commands:
+#   core    - Test CLI in current directory
+#   ui      - Test UI server
+#   mcp     - Test MCP server
+#   build   - Build all packages
 
-# Colors
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+ROOT="$(cd "$(dirname "$0")" && pwd)"
 
-# Get the directory where this script is located
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-PR_PILOT_CLI="$SCRIPT_DIR/dist/cli.js"
-
-# Check if dist/cli.js exists
-if [ ! -f "$PR_PILOT_CLI" ]; then
-    echo -e "${YELLOW}Building pr-pilot first...${NC}"
-    cd "$SCRIPT_DIR" || exit 1
+case "${1:-core}" in
+  core)
+    echo "Testing @pr-pilot/core CLI"
+    cd "$ROOT/packages/core"
     pnpm run build
-    echo ""
-fi
-
-# Determine project directory
-if [ -n "$1" ]; then
-    PROJECT_DIR="$1"
-else
-    PROJECT_DIR="$(pwd)"
-fi
-
-# Change to project directory
-cd "$PROJECT_DIR" || exit 1
-
-echo -e "${GREEN}Testing PR Pilot in: $PROJECT_DIR${NC}"
-echo -e "${GREEN}Using CLI from: $PR_PILOT_CLI${NC}"
-echo ""
-
-# Run pr-pilot
-node "$PR_PILOT_CLI" "$@"
+    node dist/cli.js
+    ;;
+    
+  ui)
+    echo "  Testing @pr-pilot/ui"
+    cd "$ROOT/packages/ui"
+    pnpm run build
+    chmod +x bin/pr-pilot-ui.js
+    # Pass all remaining args (e.g., --port=4000)
+    shift
+    ./bin/pr-pilot-ui.js "$@"
+    ;;
+    
+  mcp)
+    echo "Testing @pr-pilot/mcp"
+    cd "$ROOT/packages/mcp-server"
+    pnpm run build
+    npx @modelcontextprotocol/inspector node dist/index.js
+    ;;
+    
+  build)
+    echo "Building all packages"
+    cd "$ROOT"
+    pnpm run build
+    ;;
+    
+  *)
+    echo "Usage: ./test-local.sh [core|ui|mcp|build]"
+    exit 1
+    ;;
+esac

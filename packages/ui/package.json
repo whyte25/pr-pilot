@@ -2,6 +2,16 @@
   "name": "@pr-pilot/ui",
   "version": "0.1.0",
   "private": false,
+  "type": "module",
+  "bin": {
+    "pr-pilot-ui": "./bin/pr-pilot-ui.js"
+  },
+  "files": [
+    "bin",
+    ".next",
+    "public",
+    "src"
+  ],
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",

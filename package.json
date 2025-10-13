@@ -21,7 +21,10 @@
     "clean": "turbo run clean && rm -rf node_modules",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "release": "pnpm run build && changeset publish"
+    "release": "pnpm run build && changeset publish",
+    "test:core": "./test-local.sh core",
+    "test:ui": "./test-local.sh ui",
+    "test:mcp": "./test-local.sh mcp"
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.7",

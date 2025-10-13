@@ -1,6 +1,23 @@
 # PR Pilot
 
-This repository uses Turborepo to manage four packages:
+Automate pull request creation from commit to merge. PR Pilot detects your project structure, enforces commit conventions, runs pre-commit hooks, and opens PRs—all from a single command.
+
+## Quick Start
+
+```bash
+# CLI (recommended for most users)
+npx @pr-pilot/core
+
+# Web UI (visual interface)
+npx @pr-pilot/ui
+
+# MCP Server (for AI assistants)
+# See packages/mcp-server/README.md
+```
+
+## Packages
+
+This monorepo contains:
 
 | Package                                  | Purpose                         | Status     |
 | ---------------------------------------- | ------------------------------- | ---------- |
@@ -36,7 +53,7 @@ pnpm run format
 4. **Pushes** changes to your remote
 5. **Opens** a pull request with auto-filled metadata
 
-All from running `npx pr-pilot`.
+All from running `npx @pr-pilot/core`.
 
 ## Documentation
 

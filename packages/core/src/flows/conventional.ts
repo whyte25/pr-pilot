@@ -52,7 +52,12 @@ export async function runConventionalFlow(cwd: string, config: Config): Promise<
   // Detect scopes
   const scopes = await detectScopes(cwd, config)
   if (scopes.length === 0) {
-    console.log(pc.red('❌ No scopes detected. Please configure scopes in pr-pilot.config.ts\n'))
+    console.log(pc.yellow('⚠️  No scopes detected from project structure.'))
+    console.log(
+      pc.dim('   Run') +
+        pc.cyan(' npx @pr-pilot/core --init ') +
+        pc.dim('to generate a config with custom scopes.\n')
+    )
     return
   }
 

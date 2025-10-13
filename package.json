@@ -2,7 +2,12 @@
   "name": "pr-pilot-monorepo",
   "version": "2.0.0",
   "private": true,
-  "description": "PR Pilot monorepo - CLI, VS Code extension, UI, and MCP server",
+  "type": "module",
+  "description": "PR Pilot monorepo - CLI, MCP server, and UI packages",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/whyte25/pr-pilot.git"
+  },
   "author": "Fas",
   "license": "MIT",
   "packageManager": "pnpm@9.15.4",
@@ -11,7 +16,6 @@
     "dev": "turbo run dev",
     "ui": "pnpm --filter @pr-pilot/ui dev",
     "ui:build": "pnpm --filter @pr-pilot/ui build",
-    "ui:start": "pnpm --filter @pr-pilot/ui start",
     "typecheck": "turbo run typecheck",
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint:fix",
@@ -21,7 +25,10 @@
     "clean": "turbo run clean && rm -rf node_modules",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "release": "pnpm run build && changeset publish"
+    "release": "pnpm run build && changeset publish",
+    "test:core": "./test-local.sh core",
+    "test:ui": "./test-local.sh ui",
+    "test:mcp": "./test-local.sh mcp"
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.7",
@@ -42,10 +49,6 @@
   },
   "engines": {
     "node": ">=20.8.1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/whyte25/pr-pilot.git"
   },
   "bugs": {
     "url": "https://github.com/whyte25/pr-pilot/issues"

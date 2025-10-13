@@ -9,6 +9,9 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
+    "ui": "pnpm --filter @pr-pilot/ui dev",
+    "ui:build": "pnpm --filter @pr-pilot/ui build",
+    "ui:start": "pnpm --filter @pr-pilot/ui start",
     "typecheck": "turbo run typecheck",
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint:fix",

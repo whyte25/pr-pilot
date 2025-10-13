@@ -1,15 +1,10 @@
 'use client'
 
-import { Suspense } from 'react'
-import { motion } from 'framer-motion'
-import { GitCommit, Plus, Loader2, AlertCircle, ExternalLink } from 'lucide-react'
-import Link from 'next/link'
-import { useQueryState, parseAsInteger } from 'nuqs'
 import { AppShell } from '@/components/layout/app-shell'
+import { Alert, AlertTitle } from '@/components/ui/alert'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Alert, AlertDescription } from '@/components/ui/alert'
 import {
   Pagination,
   PaginationContent,
@@ -18,9 +13,14 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination'
-import { useCommitHistory, useRepoInfo } from '@/hooks/queries/use-git-queries'
+import { useCommitHistory } from '@/hooks/queries/use-git-queries'
 import { useRepository } from '@/hooks/queries/use-github-queries'
 import { formatDistanceToNow } from 'date-fns'
+import { motion } from 'framer-motion'
+import { AlertCircle, ExternalLink, GitCommit, Loader2, Plus } from 'lucide-react'
+import Link from 'next/link'
+import { parseAsInteger, useQueryState } from 'nuqs'
+import { Suspense } from 'react'
 
 const ITEMS_PER_PAGE = 10
 
@@ -31,10 +31,7 @@ function CommitsContent() {
 
   // Paginate commits
   const totalPages = commits ? Math.ceil(commits.length / ITEMS_PER_PAGE) : 0
-  const paginatedCommits = commits?.slice(
-    (page - 1) * ITEMS_PER_PAGE,
-    page * ITEMS_PER_PAGE
-  )
+  const paginatedCommits = commits?.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE)
 
   return (
     <AppShell>
@@ -46,9 +43,7 @@ function CommitsContent() {
         >
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Commits</h1>
-            <p className="text-muted-foreground">
-              View and manage your commits
-            </p>
+            <p className="text-muted-foreground">View and manage your commits</p>
           </div>
 
           <Button size="lg" className="gap-2" asChild>
@@ -65,17 +60,13 @@ function CommitsContent() {
               <GitCommit className="h-5 w-5" />
               Recent Commits
             </CardTitle>
-            <CardDescription>
-              Your commit history will appear here
-            </CardDescription>
+            <CardDescription>Your commit history will appear here</CardDescription>
           </CardHeader>
           <CardContent>
             {error && (
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
-                <AlertDescription>
-                  Failed to load commits. Please check your repository.
-                </AlertDescription>
+                <AlertTitle>Failed to load commits. Please check your repository.</AlertTitle>
               </Alert>
             )}
 
@@ -130,7 +121,9 @@ function CommitsContent() {
                                 {commit.message}
                               </a>
                             ) : (
-                              <h3 className="font-medium text-sm leading-tight">{commit.message}</h3>
+                              <h3 className="font-medium text-sm leading-tight">
+                                {commit.message}
+                              </h3>
                             )}
                             <div className="flex items-center gap-2 flex-shrink-0">
                               <Badge variant="outline" className="font-mono text-xs">
@@ -153,7 +146,9 @@ function CommitsContent() {
                           <div className="flex items-center gap-2 text-xs text-muted-foreground">
                             <span>{commit.author}</span>
                             <span>•</span>
-                            <span>{formatDistanceToNow(new Date(commit.date), { addSuffix: true })}</span>
+                            <span>
+                              {formatDistanceToNow(new Date(commit.date), { addSuffix: true })}
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -169,7 +164,9 @@ function CommitsContent() {
                         <PaginationItem>
                           <PaginationPrevious
                             onClick={() => setPage(Math.max(1, page - 1))}
-                            className={page === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                            className={
+                              page === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'
+                            }
                           />
                         </PaginationItem>
                         {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
@@ -186,7 +183,11 @@ function CommitsContent() {
                         <PaginationItem>
                           <PaginationNext
                             onClick={() => setPage(Math.min(totalPages, page + 1))}
-                            className={page === totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                            className={
+                              page === totalPages
+                                ? 'pointer-events-none opacity-50'
+                                : 'cursor-pointer'
+                            }
                           />
                         </PaginationItem>
                       </PaginationContent>
@@ -204,13 +205,15 @@ function CommitsContent() {
 
 export default function CommitsPage() {
   return (
-    <Suspense fallback={
-      <AppShell>
-        <div className="flex items-center justify-center min-h-screen">
-          <Loader2 className="h-8 w-8 animate-spin" />
-        </div>
-      </AppShell>
-    }>
+    <Suspense
+      fallback={
+        <AppShell>
+          <div className="flex items-center justify-center min-h-screen">
+            <Loader2 className="h-8 w-8 animate-spin" />
+          </div>
+        </AppShell>
+      }
+    >
       <CommitsContent />
     </Suspense>
   )

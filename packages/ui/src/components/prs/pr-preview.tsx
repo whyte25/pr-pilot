@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useChangedFiles } from '@/hooks/queries/use-git-queries'
 import { Eye } from 'lucide-react'
 import { UseFormReturn } from 'react-hook-form'
+import { Streamdown } from 'streamdown'
 
 interface PRPreviewProps {
   form: UseFormReturn<any>
@@ -45,7 +46,7 @@ export function PRPreview({ form }: PRPreviewProps) {
       <CardContent>
         <div className="space-y-4">
           {/* Branch Info */}
-          <div className="flex items-center gap-2 text-sm">
+          <div className="flex flex-wrap items-center gap-2 text-sm">
             <Badge variant="outline">{headBranch || 'head'}</Badge>
             <span className="text-muted-foreground">→</span>
             <Badge variant="outline">{baseBranch || 'base'}</Badge>
@@ -55,9 +56,11 @@ export function PRPreview({ form }: PRPreviewProps) {
           <div className="rounded-lg border border-border bg-muted/50 p-4 min-h-[120px]">
             {hasContent ? (
               <div className="space-y-3">
-                {title && <h3 className="font-semibold text-sm">{title}</h3>}
+                {title && <h3 className="font-semibold break-words text-sm"> {title}</h3>}
                 {description && (
-                  <p className="text-sm text-muted-foreground whitespace-pre-wrap">{description}</p>
+                  <div className="prose prose-sm dark:prose-invert max-w-none">
+                    <Streamdown>{description}</Streamdown>
+                  </div>
                 )}
                 {changeTypes.length > 0 && (
                   <div className="flex flex-wrap gap-1 mt-2">

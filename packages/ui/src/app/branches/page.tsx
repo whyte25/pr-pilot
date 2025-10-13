@@ -1,33 +1,7 @@
 'use client'
 
-import { motion } from 'framer-motion'
-import {
-  GitBranch,
-  Plus,
-  Loader2,
-  AlertCircle,
-  Check,
-  GitMerge,
-  Trash2,
-  ExternalLink,
-} from 'lucide-react'
-import { useState } from 'react'
 import { AppShell } from '@/components/layout/app-shell'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog'
+import { Alert, AlertTitle } from '@/components/ui/alert'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -38,9 +12,40 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import {
+  useCreateBranch,
+  useDeleteBranch,
+  useStashChanges,
+  useSwitchBranch,
+} from '@/hooks/mutations/use-git-mutations'
 import { useAllBranches, useCurrentBranch } from '@/hooks/queries/use-git-queries'
 import { useRepository } from '@/hooks/queries/use-github-queries'
-import { useSwitchBranch, useCreateBranch, useDeleteBranch, useStashChanges } from '@/hooks/mutations/use-git-mutations'
+import { motion } from 'framer-motion'
+import {
+  AlertCircle,
+  Check,
+  ExternalLink,
+  GitBranch,
+  GitMerge,
+  Loader2,
+  Plus,
+  Trash2,
+} from 'lucide-react'
+import { useState } from 'react'
 import { toast } from 'sonner'
 
 export default function BranchesPage() {
@@ -74,11 +79,15 @@ export default function BranchesPage() {
       refetch()
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-      
+
       // Check if it's a conflict error
-      if (errorMessage.includes('would be overwritten') || errorMessage.includes('commit your changes')) {
+      if (
+        errorMessage.includes('would be overwritten') ||
+        errorMessage.includes('commit your changes')
+      ) {
         // Extract file names from error message
-        const fileMatches = errorMessage.match(/[\w/.-]+\.(tsx?|jsx?|json|ts|js|css|scss|md)/g) || []
+        const fileMatches =
+          errorMessage.match(/[\w/.-]+\.(tsx?|jsx?|json|ts|js|css|scss|md)/g) || []
         setConflictDetails({
           branchName,
           files: fileMatches,
@@ -206,7 +215,7 @@ export default function BranchesPage() {
             {error && (
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
-                <AlertDescription>Failed to load branches. Please check your repository.</AlertDescription>
+                <AlertTitle>Failed to load branches. Please check your repository.</AlertTitle>
               </Alert>
             )}
 
@@ -233,7 +242,9 @@ export default function BranchesPage() {
               <div className="space-y-2">
                 {branches.map((branch) => {
                   const isCurrent = branch.name === currentBranch
-                  const branchUrl = repo ? `https://github.com/${repo.fullName}/tree/${branch.name}` : null
+                  const branchUrl = repo
+                    ? `https://github.com/${repo.fullName}/tree/${branch.name}`
+                    : null
 
                   return (
                     <div
@@ -320,7 +331,8 @@ export default function BranchesPage() {
             <AlertDialogHeader>
               <AlertDialogTitle>Are you sure?</AlertDialogTitle>
               <AlertDialogDescription>
-                This will delete the branch <strong>{branchToDelete}</strong>. This action cannot be undone.
+                This will delete the branch <strong>{branchToDelete}</strong>. This action cannot be
+                undone.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
@@ -413,7 +425,9 @@ export default function BranchesPage() {
                   onClick={async () => {
                     if (conflictDetails) {
                       try {
-                        await stashChanges.mutateAsync(`WIP: switching to ${conflictDetails.branchName}`)
+                        await stashChanges.mutateAsync(
+                          `WIP: switching to ${conflictDetails.branchName}`
+                        )
                         await handleSwitchBranch(conflictDetails.branchName, false)
                         toast.success('Changes stashed and branch switched')
                       } catch (error) {

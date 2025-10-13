@@ -1,17 +1,17 @@
 'use client'
 
-import { Suspense } from 'react'
-import { motion } from 'framer-motion'
-import { GitPullRequest, Plus, ExternalLink, Loader2, AlertCircle } from 'lucide-react'
-import Link from 'next/link'
-import { useQueryState, parseAsInteger } from 'nuqs'
 import { AppShell } from '@/components/layout/app-shell'
+import { PRDetailView } from '@/components/prs/pr-detail-view'
+import { Alert, AlertTitle } from '@/components/ui/alert'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { usePullRequests, usePullRequest } from '@/hooks/queries/use-github-queries'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { PRDetailView } from '@/components/prs/pr-detail-view'
+import { usePullRequest, usePullRequests } from '@/hooks/queries/use-github-queries'
+import { motion } from 'framer-motion'
+import { AlertCircle, ExternalLink, GitPullRequest, Loader2, Plus } from 'lucide-react'
+import Link from 'next/link'
+import { parseAsInteger, useQueryState } from 'nuqs'
+import { Suspense } from 'react'
 
 function PRsContent() {
   const [prNumber, setPrNumber] = useQueryState('number', parseAsInteger)
@@ -20,10 +20,14 @@ function PRsContent() {
 
   // Show detail view if PR number is in query
   if (prNumber && selectedPR) {
-    return <PRDetailView pr={selectedPR} onBack={() => setPrNumber(null)} />
+    return (
+      <PRDetailView
+        key={`${selectedPR}-${prNumber}`}
+        pr={selectedPR}
+        backToPRs={() => setPrNumber(null)}
+      />
+    )
   }
-
-  // Show list view
 
   return (
     <AppShell>
@@ -35,9 +39,7 @@ function PRsContent() {
         >
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Pull Requests</h1>
-            <p className="text-muted-foreground">
-              Manage your pull requests
-            </p>
+            <p className="text-muted-foreground">Manage your pull requests</p>
           </div>
 
           <Button size="lg" className="gap-2" asChild>
@@ -54,17 +56,15 @@ function PRsContent() {
               <GitPullRequest className="h-5 w-5" />
               Recent Pull Requests
             </CardTitle>
-            <CardDescription>
-              Your PRs will appear here
-            </CardDescription>
+            <CardDescription>Your PRs will appear here</CardDescription>
           </CardHeader>
           <CardContent>
             {error && (
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
-                <AlertDescription>
+                <AlertTitle>
                   Failed to load pull requests. Please check your GitHub authentication.
-                </AlertDescription>
+                </AlertTitle>
               </Alert>
             )}
 
@@ -90,9 +90,9 @@ function PRsContent() {
             {!isLoading && !error && prs && prs.length > 0 && (
               <div className="space-y-3">
                 {prs.map((pr) => (
-                  <Link
+                  <div
                     key={pr.number}
-                    href={`/prs?number=${pr.number}`}
+                    onClick={() => setPrNumber(pr.number)}
                     className="flex items-center justify-between p-4 rounded-lg border hover:bg-muted/50 transition-colors cursor-pointer"
                   >
                     <div className="flex items-start gap-3 flex-1">
@@ -112,7 +112,7 @@ function PRsContent() {
                         <ExternalLink className="h-4 w-4" />
                       </a>
                     </Button>
-                  </Link>
+                  </div>
                 ))}
               </div>
             )}
@@ -125,13 +125,15 @@ function PRsContent() {
 
 export default function PRsPage() {
   return (
-    <Suspense fallback={
-      <AppShell>
-        <div className="flex items-center justify-center min-h-screen">
-          <Loader2 className="h-8 w-8 animate-spin" />
-        </div>
-      </AppShell>
-    }>
+    <Suspense
+      fallback={
+        <AppShell>
+          <div className="flex items-center justify-center min-h-screen">
+            <Loader2 className="h-8 w-8 animate-spin" />
+          </div>
+        </AppShell>
+      }
+    >
       <PRsContent />
     </Suspense>
   )

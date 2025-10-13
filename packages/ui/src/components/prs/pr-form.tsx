@@ -1,6 +1,8 @@
 'use client'
 
-import { Alert, AlertDescription } from '@/components/ui/alert'
+import { PRDescriptionEditor } from '@/components/prs/pr-description-editor'
+import { Alert, AlertTitle } from '@/components/ui/alert'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -28,9 +30,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Textarea } from '@/components/ui/textarea'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import { Badge } from '@/components/ui/badge'
 import { useCreatePullRequest } from '@/hooks/mutations/use-github-mutations'
 import { useRepoInfo } from '@/hooks/queries/use-git-queries'
 import { useBranches, useRepository } from '@/hooks/queries/use-github-queries'
@@ -152,9 +152,9 @@ export function PRForm({ form }: PRFormProps) {
             {branchesError && (
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
-                <AlertDescription>
+                <AlertTitle>
                   Failed to load branches. Please check your GitHub authentication in settings.
-                </AlertDescription>
+                </AlertTitle>
               </Alert>
             )}
 
@@ -171,7 +171,7 @@ export function PRForm({ form }: PRFormProps) {
                         <TooltipProvider>
                           <Tooltip>
                             <TooltipTrigger asChild>
-                              <SelectTrigger className="max-w-full">
+                              <SelectTrigger className="max-w-[250px]">
                                 <SelectValue
                                   placeholder={
                                     branchesLoading ? 'Loading...' : 'Select base branch'
@@ -210,7 +210,7 @@ export function PRForm({ form }: PRFormProps) {
                         <TooltipProvider>
                           <Tooltip>
                             <TooltipTrigger asChild>
-                              <SelectTrigger className="max-w-full">
+                              <SelectTrigger className="max-w-[250px]">
                                 <SelectValue
                                   placeholder={
                                     branchesLoading ? 'Loading...' : 'Select head branch'
@@ -255,7 +255,7 @@ export function PRForm({ form }: PRFormProps) {
               )}
             />
 
-            {/* Description Field */}
+            {/* Description Field - Rich Editor */}
             <FormField
               control={form.control}
               name="description"
@@ -263,13 +263,15 @@ export function PRForm({ form }: PRFormProps) {
                 <FormItem>
                   <FormLabel>Description (optional)</FormLabel>
                   <FormControl>
-                    <Textarea
+                    <PRDescriptionEditor
+                      value={field.value}
+                      onChange={field.onChange}
                       placeholder="Detailed description of changes..."
-                      rows={6}
-                      {...field}
                     />
                   </FormControl>
-                  <FormDescription>Supports Markdown formatting</FormDescription>
+                  <FormDescription>
+                    Use markdown formatting to describe your changes
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -338,9 +340,7 @@ export function PRForm({ form }: PRFormProps) {
                         </Badge>
                       ))}
                     </div>
-                    <FormDescription>
-                      Default labels from your settings
-                    </FormDescription>
+                    <FormDescription>Default labels from your settings</FormDescription>
                   </FormItem>
                 )}
               />
@@ -361,9 +361,7 @@ export function PRForm({ form }: PRFormProps) {
                         </Badge>
                       ))}
                     </div>
-                    <FormDescription>
-                      Default reviewers from your settings
-                    </FormDescription>
+                    <FormDescription>Default reviewers from your settings</FormDescription>
                   </FormItem>
                 )}
               />

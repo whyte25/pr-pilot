@@ -22,10 +22,10 @@ interface PRDetailViewProps {
     head: string
     base: string
   }
-  onBack: () => void
+  backToPRs: () => void
 }
 
-export function PRDetailView({ pr, onBack }: PRDetailViewProps) {
+export function PRDetailView({ pr, backToPRs }: PRDetailViewProps) {
   return (
     <AppShell>
       <div className="flex flex-col gap-6 p-8">
@@ -36,7 +36,7 @@ export function PRDetailView({ pr, onBack }: PRDetailViewProps) {
           className="flex items-center justify-between"
         >
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" onClick={onBack}>
+            <Button variant="ghost" size="icon" onClick={backToPRs}>
               <ArrowLeft className="h-4 w-4" />
             </Button>
             <div>

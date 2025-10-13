@@ -34,12 +34,9 @@ export async function getGitAsync(baseDir?: string): Promise<SimpleGit> {
       // Find the Git root directory
       const root = await tempGit.revparse(['--show-toplevel'])
       gitRoot = root.trim()
-      console.log('🔍 Git root directory:', gitRoot)
-      console.log('📂 Current working directory:', startDir)
       git = simpleGit(gitRoot)
     } catch (error) {
       // Fallback to current directory if not in a Git repo
-      console.log('⚠️ Not in a Git repo, using:', startDir)
       git = simpleGit(startDir)
     }
   }
@@ -70,14 +67,6 @@ export async function getGitStatus(baseDir?: string): Promise<StatusResult> {
 export async function getChangedFiles(baseDir?: string) {
   const status = await getGitStatus(baseDir)
 
-  console.log('📊 Git Status Summary:')
-  console.log('  Modified:', status.modified.length, status.modified)
-  console.log('  Created:', status.created.length, status.created)
-  console.log('  Deleted:', status.deleted.length, status.deleted)
-  console.log('  Renamed:', status.renamed.length, status.renamed)
-  console.log('  Not added:', status.not_added.length, status.not_added)
-  console.log('  Staged:', status.staged.length, status.staged)
-
   const files = [
     ...status.modified.map((file) => ({ path: file, status: 'M' as const })),
     ...status.created.map((file) => ({ path: file, status: 'A' as const })),
@@ -85,8 +74,6 @@ export async function getChangedFiles(baseDir?: string) {
     ...status.renamed.map((file) => ({ path: file.to, status: 'R' as const })),
     ...status.not_added.map((file) => ({ path: file, status: 'A' as const })),
   ]
-
-  console.log('📁 Total files returned:', files.length)
 
   // Get diff stats for each file
   const filesWithStats = await Promise.all(
@@ -218,14 +205,11 @@ export async function getFileDiff(filePath: string, baseDir?: string): Promise<s
     )
 
     if (!matchingFile) {
-      console.log('File not found in Git status:', filePath)
       return ''
     }
 
-    console.log('Found matching file:', matchingFile)
     const isNewFile =
       status.not_added.includes(matchingFile) || status.created.includes(matchingFile)
-    console.log('File is new:', isNewFile)
 
     // For new files, show the full content as a diff
     if (isNewFile) {
@@ -247,81 +231,34 @@ export async function getFileDiff(filePath: string, baseDir?: string): Promise<s
           ...lines.map((line) => `+${line}`),
         ]
 
-        console.log('✓ Generated diff for new file')
         return diffLines.join('\n')
       } catch (error) {
-        console.log('✗ Failed to read new file:', error)
         return ''
       }
     }
 
-    // Try to get diff using the exact path from Git status
-    let diff = ''
+    // Try different strategies to get the diff
+    const strategies = [
+      () => gitInstance.raw(['diff', matchingFile]),
+      () => gitInstance.diff(['--', matchingFile]),
+      () => gitInstance.diff(['--cached', '--', matchingFile]),
+      () => gitInstance.diff(['HEAD', '--', matchingFile]),
+    ]
 
-    // 1. Try without any revision (just the file) - for unstaged changes
-    try {
-      diff = await gitInstance.raw(['diff', matchingFile])
-      console.log('Strategy 1 (raw diff file) result:', diff ? `${diff.length} chars` : 'empty')
-      if (diff && diff.trim()) {
-        console.log('✓ Got diff from raw diff')
-        return diff
+    for (const strategy of strategies) {
+      try {
+        const diff = await strategy()
+        if (diff && diff.trim()) {
+          return diff
+        }
+      } catch {
+        // Try next strategy
+        continue
       }
-    } catch (e) {
-      console.log('✗ Raw diff failed:', e)
     }
 
-    // 2. Try with -- separator
-    try {
-      diff = await gitInstance.diff(['--', matchingFile])
-      console.log('Strategy 2 (with --) result:', diff ? `${diff.length} chars` : 'empty')
-      if (diff && diff.trim()) {
-        console.log('✓ Got diff from unstaged changes')
-        return diff
-      }
-    } catch (e) {
-      console.log('✗ Unstaged diff failed:', e)
-    }
-
-    // 2. Try staged changes
-    try {
-      diff = await gitInstance.diff(['--cached', '--', matchingFile])
-      console.log('Strategy 2 result:', diff ? `${diff.length} chars` : 'empty')
-      if (diff && diff.trim()) {
-        console.log('✓ Got diff from staged changes')
-        return diff
-      }
-    } catch (e) {
-      console.log('✗ Staged diff failed:', e)
-    }
-
-    // 3. Try against HEAD
-    try {
-      diff = await gitInstance.diff(['HEAD', '--', matchingFile])
-      console.log('Strategy 3 result:', diff ? `${diff.length} chars` : 'empty')
-      if (diff && diff.trim()) {
-        console.log('✓ Got diff from HEAD')
-        return diff
-      }
-    } catch (e) {
-      console.log('✗ HEAD diff failed:', e)
-    }
-
-    // 4. Last resort: use raw git command
-    try {
-      diff = await gitInstance.raw(['diff', '--', matchingFile])
-      console.log('Strategy 4 (raw) result:', diff ? `${diff.length} chars` : 'empty')
-      if (diff && diff.trim()) {
-        console.log('✓ Got diff from raw command')
-        return diff
-      }
-    } catch (e) {
-      console.log('✗ Raw diff failed:', e)
-    }
-
-    console.log('⚠️ All diff strategies failed for:', matchingFile)
     return ''
   } catch (error) {
-    console.error('Error getting file diff:', error)
     return ''
   }
 }

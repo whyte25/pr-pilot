@@ -14,8 +14,6 @@ interface FileDiffDialogProps {
 export function FileDiffDialog({ filePath, onClose }: FileDiffDialogProps) {
   const { data: diff, isLoading, error } = useFileDiff(filePath)
 
-  console.log(diff)
-
   return (
     <AnimatePresence>
       {filePath && (

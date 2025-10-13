@@ -115,15 +115,12 @@ export async function getRepo() {
     }
   }
 }
-
 /**
  * Get diff for a specific file
  */
 export async function getDiff(filePath: string) {
   try {
-    console.log('Getting diff for file:', filePath)
     const diff = await getFileDiff(filePath)
-    console.log('Diff result:', diff ? `${diff.length} characters` : 'empty')
 
     if (!diff || diff.trim() === '') {
       return {
@@ -134,7 +131,6 @@ export async function getDiff(filePath: string) {
 
     return { success: true, data: diff }
   } catch (error) {
-    console.error('Error in getDiff:', error)
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Failed to get file diff',

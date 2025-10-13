@@ -75,9 +75,7 @@ export function useFileDiff(filePath: string | null) {
     queryFn: async () => {
       if (!filePath) return null
 
-      console.log('useFileDiff: Fetching diff for', filePath)
       const result = await getDiff(filePath)
-      console.log('useFileDiff: Result', result)
 
       if (!result.success) {
         throw new Error(result.error)

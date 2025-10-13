@@ -3,3 +3,5 @@ dist
 *.log
 .pr-pilot
 coverage
+CHANGELOG.md
+.changeset

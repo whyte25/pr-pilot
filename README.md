@@ -2,21 +2,19 @@
 
 Automate pull request creation from commit to merge. PR Pilot detects your project structure, enforces commit conventions, runs pre-commit hooks, and opens PRs—all from a single command.
 
-## Monorepo Structure
-
 This repository uses Turborepo to manage four packages:
 
-| Package                                 | Purpose                         | Status            |
-| --------------------------------------- | ------------------------------- | ----------------- |
-| [`@pr-pilot/core`](./packages/core)     | CLI and core automation library | ✅ Stable         |
-| [`pr-pilot-mcp`](./packages/mcp-server) | MCP server for AI assistants    | ✅ Stable         |
-| [`@pr-pilot/ui`](./packages/ui)         | Next.js web interface           | 🚧 In Development |
-| `@pr-pilot/vscode`                      | VS Code extension               | 📋 Planned        |
+| Package                                 | Purpose                         | Status     |
+| --------------------------------------- | ------------------------------- | ---------- |
+| [`@pr-pilot/core`](./packages/core)     | CLI and core automation library | ✅ Stable  |
+| [`pr-pilot-mcp`](./packages/mcp-server) | MCP server for AI assistants    | ✅ Stable  |
+| [`@pr-pilot/ui`](./packages/ui)         | Next.js web interface           | 🧪 Beta    |
+| `@pr-pilot/vscode`                      | VS Code extension               | 📋 Planned |
 
 ## Development
 
 ```bash
-# Install dependencies
+{{ ... }}
 pnpm install
 
 # Build all packages

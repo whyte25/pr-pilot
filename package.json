@@ -1,6 +1,6 @@
 {
   "name": "pr-pilot-monorepo",
-  "version": "1.3.0",
+  "version": "2.0.0",
   "private": true,
   "description": "PR Pilot monorepo - CLI, VS Code extension, UI, and MCP server",
   "author": "Fas",

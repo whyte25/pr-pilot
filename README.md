@@ -2,14 +2,29 @@
 
 Automate pull request creation from commit to merge. PR Pilot detects your project structure, enforces commit conventions, runs pre-commit hooks, and opens PRs—all from a single command.
 
-This repository uses Turborepo to manage four packages:
+## Quick Start
 
-| Package                                 | Purpose                         | Status     |
-| --------------------------------------- | ------------------------------- | ---------- |
-| [`@pr-pilot/core`](./packages/core)     | CLI and core automation library | ✅ Stable  |
-| [`pr-pilot-mcp`](./packages/mcp-server) | MCP server for AI assistants    | ✅ Stable  |
-| [`@pr-pilot/ui`](./packages/ui)         | Next.js web interface           | 🧪 Beta    |
-| `@pr-pilot/vscode`                      | VS Code extension               | 📋 Planned |
+```bash
+# CLI (recommended for most users)
+npx @pr-pilot/core
+
+# Web UI (visual interface)
+npx @pr-pilot/ui
+
+# MCP Server (for AI assistants)
+# See packages/mcp-server/README.md
+```
+
+## Packages
+
+This monorepo contains:
+
+| Package                                  | Purpose                         | Status     |
+| ---------------------------------------- | ------------------------------- | ---------- |
+| [`@pr-pilot/core`](./packages/core)      | CLI and core automation library | ✅ Stable  |
+| [`@pr-pilot/mcp`](./packages/mcp-server) | MCP server for AI assistants    | ✅ Stable  |
+| [`@pr-pilot/ui`](./packages/ui)          | Next.js web interface           | 🧪 Beta    |
+| `@pr-pilot/vscode`                       | VS Code extension               | 📋 Planned |
 
 ## Development
 
@@ -38,7 +53,7 @@ pnpm run format
 4. **Pushes** changes to your remote
 5. **Opens** a pull request with auto-filled metadata
 
-All from running `npx pr-pilot`.
+All from running `npx @pr-pilot/core`.
 
 ## Documentation
 

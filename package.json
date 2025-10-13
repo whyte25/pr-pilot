@@ -1,6 +1,6 @@
 {
   "name": "pr-pilot-monorepo",
-  "version": "1.3.0",
+  "version": "2.0.0",
   "private": true,
   "description": "PR Pilot monorepo - CLI, VS Code extension, UI, and MCP server",
   "author": "Fas",
@@ -21,7 +21,10 @@
     "clean": "turbo run clean && rm -rf node_modules",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "release": "pnpm run build && changeset publish"
+    "release": "pnpm run build && changeset publish",
+    "test:core": "./test-local.sh core",
+    "test:ui": "./test-local.sh ui",
+    "test:mcp": "./test-local.sh mcp"
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.7",

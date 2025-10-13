@@ -11,21 +11,19 @@ export async function detectScopes(cwd: string, config: Config): Promise<string[
   if (config.commit.scopes === false) {
     return []
   }
-
   // If user provided scopes, use them
   if (Array.isArray(config.commit.scopes)) {
     return config.commit.scopes
   }
 
-  // Auto-detect scopes
+  // Auto-detect scopes from monorepo structure only
   const scopes: string[] = []
   const isMonorepo = await detectMonorepo(cwd)
 
   if (isMonorepo) {
     // Scan common monorepo directories
-    const monorepoRoots = ['apps', 'packages', 'services', 'libs', 'tools', 'scripts']
-
-    for (const root of monorepoRoots) {
+    const roots = ['apps', 'packages', 'services', 'libs']
+    for (const root of roots) {
       const rootPath = join(cwd, root)
       if (existsSync(rootPath)) {
         const subdirs = getSubdirectories(rootPath)
@@ -34,10 +32,8 @@ export async function detectScopes(cwd: string, config: Config): Promise<string[
     }
   }
 
-  // Add common generic scopes
-  scopes.push('repo', 'docs', 'ci', 'deps', 'config')
-
-  // Remove duplicates and sort
+  // If no scopes detected, return empty array
+  // Users can configure scopes in pr-pilot.config.ts if needed
   return [...new Set(scopes)].sort()
 }
 

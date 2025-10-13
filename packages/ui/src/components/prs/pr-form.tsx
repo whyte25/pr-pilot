@@ -330,7 +330,7 @@ export function PRForm({ form }: PRFormProps) {
               <FormField
                 control={form.control}
                 name="labels"
-                render={({ field }) => (
+                render={() => (
                   <FormItem>
                     <FormLabel>Labels (from config)</FormLabel>
                     <div className="flex flex-wrap gap-2">
@@ -351,7 +351,7 @@ export function PRForm({ form }: PRFormProps) {
               <FormField
                 control={form.control}
                 name="reviewers"
-                render={({ field }) => (
+                render={() => (
                   <FormItem>
                     <FormLabel>Reviewers (from config)</FormLabel>
                     <div className="flex flex-wrap gap-2">

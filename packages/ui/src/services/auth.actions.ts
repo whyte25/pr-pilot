@@ -12,7 +12,13 @@ export async function saveGitHubTokenServer(token: string, persistAfterSession =
   try {
     const cookieStore = await cookies()
 
-    const cookieOptions: any = {
+    const cookieOptions: {
+      httpOnly: boolean
+      secure: boolean
+      sameSite: 'strict'
+      path: string
+      maxAge?: number
+    } = {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict' as const,

@@ -1,10 +1,13 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Settings, Github, Shield } from 'lucide-react'
+import { ArrowLeft, Github, Shield, Settings } from 'lucide-react'
+import Link from 'next/link'
 import { AppShell } from '@/components/layout/app-shell'
+import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { GitHubAuthSheet } from '@/components/settings/github-auth-sheet'
+import { ConfigEditor } from '@/components/settings/config-editor'
 
 export default function SettingsPage() {
   return (
@@ -92,34 +95,7 @@ export default function SettingsPage() {
         </motion.div>
 
         {/* Configuration */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-        >
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Settings className="h-5 w-5" />
-                Configuration
-              </CardTitle>
-              <CardDescription>
-                Manage your pr-pilot.config.ts settings
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-col items-center justify-center py-12 text-center">
-                <div className="rounded-full bg-muted p-3 mb-3">
-                  <Settings className="h-6 w-6 text-muted-foreground" />
-                </div>
-                <p className="text-sm font-medium">Settings editor coming soon</p>
-                <p className="text-xs text-muted-foreground mt-1">
-                  Visual editor for pr-pilot.config.ts
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+        <ConfigEditor />
       </div>
     </AppShell>
   )

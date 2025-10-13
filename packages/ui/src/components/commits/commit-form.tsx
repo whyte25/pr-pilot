@@ -28,6 +28,7 @@ import {
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { useCreateCommit } from '@/hooks/mutations'
+import { useConfigStore } from '@/store/config-store'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { motion } from 'framer-motion'
 import { GitCommit, Zap } from 'lucide-react'
@@ -47,19 +48,6 @@ const commitTypes = [
   { value: 'chore', label: 'chore', description: 'Maintenance', color: 'bg-gray-500' },
 ]
 
-const formSchema = z.object({
-  type: z.string({
-    required_error: 'Please select a commit type',
-  }),
-  scope: z.string().optional(),
-  message: z
-    .string()
-    .min(1, 'Message is required')
-    .max(100, 'Message must be less than 100 characters'),
-  body: z.string().optional(),
-  breaking: z.boolean(),
-})
-
 interface CommitFormProps {
   selectedFiles?: string[]
 }
@@ -67,6 +55,25 @@ interface CommitFormProps {
 export function CommitForm({ selectedFiles = [] }: CommitFormProps) {
   const router = useRouter()
   const createCommit = useCreateCommit()
+  const config = useConfigStore()
+
+  // Dynamic schema based on config
+  const formSchema = z.object({
+    type:
+      config.commit.format === 'conventional'
+        ? z.string({ required_error: 'Please select a commit type' })
+        : z.string().optional(),
+    scope: z.string().optional(),
+    message: z
+      .string()
+      .min(1, 'Message is required')
+      .max(
+        config.commit.maxLength,
+        `Message must be less than ${config.commit.maxLength} characters`
+      ),
+    body: z.string().optional(),
+    breaking: z.boolean(),
+  })
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -79,8 +86,17 @@ export function CommitForm({ selectedFiles = [] }: CommitFormProps) {
     },
   })
 
+  // Get available scopes
+  const availableScopes = Array.isArray(config.commit.scopes) ? config.commit.scopes : []
+  const showScope = config.commit.format === 'conventional' && config.commit.scopes !== false
+
   const watchedValues = form.watch()
-  const commitMessage = `${watchedValues.type}${watchedValues.scope ? `(${watchedValues.scope})` : ''}${watchedValues.breaking ? '!' : ''}: ${watchedValues.message || ''}`
+
+  // Build commit message based on format
+  const commitMessage =
+    config.commit.format === 'conventional'
+      ? `${watchedValues.type}${watchedValues.scope ? `(${watchedValues.scope})` : ''}${watchedValues.breaking ? '!' : ''}: ${watchedValues.message || ''}`
+      : watchedValues.message || ''
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     if (selectedFiles.length === 0) {
@@ -90,7 +106,11 @@ export function CommitForm({ selectedFiles = [] }: CommitFormProps) {
       return
     }
 
-    const fullMessage = `${values.type}${values.scope ? `(${values.scope})` : ''}${values.breaking ? '!' : ''}: ${values.message}`
+    // Build commit message based on format
+    const fullMessage =
+      config.commit.format === 'conventional'
+        ? `${values.type}${values.scope ? `(${values.scope})` : ''}${values.breaking ? '!' : ''}: ${values.message}`
+        : values.message
     const bodyText = values.body || ''
 
     createCommit.mutate(
@@ -122,56 +142,86 @@ export function CommitForm({ selectedFiles = [] }: CommitFormProps) {
           <GitCommit className="h-5 w-5" />
           Commit Details
         </CardTitle>
-        <CardDescription>Follow conventional commits format</CardDescription>
+        <CardDescription>
+          {config.commit.format === 'conventional'
+            ? 'Follow conventional commits format'
+            : 'Simple commit message'}
+        </CardDescription>
       </CardHeader>
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <CardContent className="space-y-6">
-            {/* Type Field */}
-            <FormField
-              control={form.control}
-              name="type"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Type *</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a type" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {commitTypes.map((t) => (
-                        <SelectItem key={t.value} value={t.value}>
-                          <div className="flex items-center gap-2">
-                            <div className={`h-2 w-2 rounded-full ${t.color}`} />
-                            <span className="font-mono font-semibold">{t.label}</span>
-                            <span className="text-muted-foreground">- {t.description}</span>
-                          </div>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {/* Type Field - Only show in conventional mode */}
+            {config.commit.format === 'conventional' && (
+              <FormField
+                control={form.control}
+                name="type"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Type *</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a type" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {commitTypes.map((t) => (
+                          <SelectItem key={t.value} value={t.value}>
+                            <div className="flex items-center gap-2">
+                              <div className={`h-2 w-2 rounded-full ${t.color}`} />
+                              <span className="font-mono font-semibold">{t.label}</span>
+                              <span className="text-muted-foreground">- {t.description}</span>
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
 
-            {/* Scope Field */}
-            <FormField
-              control={form.control}
-              name="scope"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Scope (optional)</FormLabel>
-                  <FormControl>
-                    <Input placeholder="e.g., api, ui, auth" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {/* Scope Field - Only show if enabled */}
+            {showScope && (
+              <FormField
+                control={form.control}
+                name="scope"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Scope (optional)</FormLabel>
+                    {availableScopes.length > 0 ? (
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a scope" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {availableScopes.map((scope) => (
+                            <SelectItem key={scope} value={scope}>
+                              {scope}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    ) : (
+                      <FormControl>
+                        <Input placeholder="e.g., api, ui, auth" {...field} />
+                      </FormControl>
+                    )}
+                    <FormDescription>
+                      {config.commit.scopes === 'auto'
+                        ? 'Auto-detected from changed files'
+                        : 'Custom scope for this commit'}
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
 
             {/* Message Field */}
             <FormField
@@ -183,7 +233,9 @@ export function CommitForm({ selectedFiles = [] }: CommitFormProps) {
                   <FormControl>
                     <Input placeholder="Brief description of changes" {...field} />
                   </FormControl>
-                  <FormDescription>{field.value?.length || 0}/100 characters</FormDescription>
+                  <FormDescription>
+                    {field.value?.length || 0}/{config.commit.maxLength} characters
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

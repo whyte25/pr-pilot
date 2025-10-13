@@ -1,12 +1,13 @@
 'use client'
 
-import { motion } from 'framer-motion'
-import { ArrowLeft, ExternalLink } from 'lucide-react'
-import { formatDistanceToNow } from 'date-fns'
 import { AppShell } from '@/components/layout/app-shell'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
+import { formatDistanceToNow } from 'date-fns'
+import { motion } from 'framer-motion'
+import { ArrowLeft, ExternalLink } from 'lucide-react'
+import { Streamdown } from 'streamdown'
 
 interface PRDetailViewProps {
   pr: {
@@ -63,7 +64,7 @@ export function PRDetailView({ pr, onBack }: PRDetailViewProps) {
               </CardHeader>
               <CardContent>
                 <div className="prose prose-sm dark:prose-invert max-w-none">
-                  {pr.body || 'No description provided.'}
+                  {<Streamdown>{pr?.body || 'No description provided.'}</Streamdown>}
                 </div>
               </CardContent>
             </Card>
@@ -77,9 +78,7 @@ export function PRDetailView({ pr, onBack }: PRDetailViewProps) {
               <CardContent className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-muted-foreground">State</span>
-                  <Badge variant={pr.state === 'open' ? 'default' : 'secondary'}>
-                    {pr.state}
-                  </Badge>
+                  <Badge variant={pr.state === 'open' ? 'default' : 'secondary'}>{pr.state}</Badge>
                 </div>
                 {pr.draft && (
                   <div className="flex items-center justify-between">

@@ -33,6 +33,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { useCreatePullRequest } from '@/hooks/mutations/use-github-mutations'
 import { useRepoInfo } from '@/hooks/queries/use-git-queries'
 import { useBranches, useRepository } from '@/hooks/queries/use-github-queries'
+import { useConfigStore } from '@/store/config-store'
 import { AlertCircle, GitPullRequest, Loader2 } from 'lucide-react'
 import * as React from 'react'
 import { useForm } from 'react-hook-form'
@@ -70,12 +71,16 @@ export function PRForm({ form }: PRFormProps) {
   const { data: repo, isLoading: repoLoading } = useRepository()
   const { data: repoInfo } = useRepoInfo()
   const createPR = useCreatePullRequest()
+  const config = useConfigStore()
 
   // Set defaults when data loads (only once)
   const defaultsSet = React.useRef(false)
   if (!defaultsSet.current && repo?.defaultBranch && repoInfo?.branch) {
-    form.setValue('baseBranch', repo.defaultBranch)
+    // Use config for base branch (auto = repo default)
+    const baseBranch = config.pr.base === 'auto' ? repo.defaultBranch : config.pr.base
+    form.setValue('baseBranch', baseBranch)
     form.setValue('headBranch', repoInfo.branch)
+    form.setValue('draft', config.pr.draft)
     defaultsSet.current = true
   }
 

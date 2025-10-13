@@ -1,4 +1,4 @@
-# pr-pilot-mcp
+# @pr-pilot/mcp
 
 MCP (Model Context Protocol) server that exposes PR Pilot's automation tools to AI assistants like Claude, Cursor, and Windsurf.
 
@@ -18,13 +18,13 @@ Provides four tools that AI assistants can invoke to automate Git workflows:
 ### Global Install
 
 ```bash
-npm install -g pr-pilot-mcp
+npm install -g @pr-pilot/mcp
 ```
 
 ### One-Time Use
 
 ```bash
-npx -y pr-pilot-mcp
+npx -y @pr-pilot/mcp
 ```
 
 ## Configuration
@@ -38,7 +38,7 @@ Edit `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) o
   "mcpServers": {
     "pr-pilot": {
       "command": "npx",
-      "args": ["-y", "pr-pilot-mcp"]
+      "args": ["-y", "@pr-pilot/mcp"]
     }
   }
 }
@@ -53,7 +53,7 @@ Add to Cursor's MCP settings:
   "mcpServers": {
     "pr-pilot": {
       "command": "npx",
-      "args": ["-y", "pr-pilot-mcp"]
+      "args": ["-y", "@pr-pilot/mcp"]
     }
   }
 }
@@ -68,7 +68,7 @@ Add to Windsurf's MCP configuration:
   "mcpServers": {
     "pr-pilot": {
       "command": "npx",
-      "args": ["-y", "pr-pilot-mcp"]
+      "args": ["-y", "@pr-pilot/mcp"]
     }
   }
 }
@@ -80,7 +80,7 @@ The server runs on stdio and follows the MCP specification. Any compliant client
 
 ```bash
 # Run directly
-npx pr-pilot-mcp
+npx @pr-pilot/mcp
 
 # Or if installed globally
 pr-pilot-mcp

@@ -141,14 +141,22 @@ export async function getCurrentBranch(baseDir?: string): Promise<string> {
  * Get all branches
  */
 export async function getBranches(baseDir?: string) {
-  const gitInstance = getGit(baseDir)
-  const branches = await gitInstance.branch()
+  const gitInstance = await getGitAsync(baseDir)
+  const branchSummary = await gitInstance.branch()
 
-  return {
-    current: branches.current,
-    all: branches.all,
-    branches: branches.branches,
-  }
+  // Convert branches object to array, filter out remote branches
+  const branchArray = Object.entries(branchSummary.branches)
+    .filter(([name]) => !name.startsWith('remotes/'))
+    .map(([name, branch]) => ({
+      name,
+      current: branch.current,
+      commit: {
+        hash: branch.commit,
+        message: branch.label,
+      },
+    }))
+
+  return branchArray
 }
 
 /**

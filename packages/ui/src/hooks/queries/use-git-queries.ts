@@ -3,6 +3,7 @@ import {
   getStatus,
   getFiles,
   getBranch,
+  getAllBranches,
   getHistory,
   getRepo,
   getDiff,
@@ -49,6 +50,22 @@ export function useCurrentBranch() {
     queryKey: queryKeys.git.branch(),
     queryFn: async () => {
       const result = await getBranch()
+      if (!result.success) {
+        throw new Error(result.error)
+      }
+      return result.data
+    },
+  })
+}
+
+/**
+ * Hook to get all branches
+ */
+export function useAllBranches() {
+  return useQuery({
+    queryKey: queryKeys.git.branches(),
+    queryFn: async () => {
+      const result = await getAllBranches()
       if (!result.success) {
         throw new Error(result.error)
       }

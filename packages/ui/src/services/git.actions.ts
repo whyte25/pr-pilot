@@ -17,7 +17,33 @@ import {
 export async function getStatus() {
   try {
     const status = await getGitStatus()
-    return { success: true, data: status }
+    // Convert to plain object for client component serialization
+    return {
+      success: true,
+      data: {
+        not_added: status.not_added,
+        conflicted: status.conflicted,
+        created: status.created,
+        deleted: status.deleted,
+        modified: status.modified,
+        renamed: status.renamed.map((r) => ({
+          from: r.from,
+          to: r.to,
+        })),
+        staged: status.staged,
+        // Convert files array to plain objects
+        files: status.files.map((file) => ({
+          path: file.path,
+          index: file.index,
+          working_dir: file.working_dir,
+        })),
+        ahead: status.ahead,
+        behind: status.behind,
+        current: status.current,
+        tracking: status.tracking,
+        isClean: status.isClean(),
+      },
+    }
   } catch (error) {
     return {
       success: false,
@@ -115,6 +141,79 @@ export async function getRepo() {
     }
   }
 }
+
+/**
+ * Switch to a different branch
+ */
+export async function switchBranch(branchName: string, force = false) {
+  try {
+    const git = await import('./git.service').then((m) => m.getGitAsync())
+    if (force) {
+      await git.checkout(['-f', branchName])
+    } else {
+      await git.checkout(branchName)
+    }
+    return { success: true }
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to switch branch',
+    }
+  }
+}
+
+/**
+ * Create a new branch
+ */
+export async function createBranch(branchName: string) {
+  try {
+    const git = await import('./git.service').then((m) => m.getGitAsync())
+    await git.checkoutLocalBranch(branchName)
+    return { success: true }
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to create branch',
+    }
+  }
+}
+
+/**
+ * Delete a branch
+ */
+export async function deleteBranch(branchName: string) {
+  try {
+    const git = await import('./git.service').then((m) => m.getGitAsync())
+    await git.deleteLocalBranch(branchName)
+    return { success: true }
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to delete branch',
+    }
+  }
+}
+
+/**
+ * Stash changes
+ */
+export async function stashChanges(message?: string) {
+  try {
+    const git = await import('./git.service').then((m) => m.getGitAsync())
+    if (message) {
+      await git.stash(['push', '-m', message])
+    } else {
+      await git.stash(['push'])
+    }
+    return { success: true }
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to stash changes',
+    }
+  }
+}
+
 /**
  * Get diff for a specific file
  */

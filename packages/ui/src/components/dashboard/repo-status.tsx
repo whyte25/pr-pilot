@@ -71,30 +71,67 @@ export function RepoStatus() {
 
             {/* Change Details */}
             {hasChanges && status && (
-              <div className="grid grid-cols-2 gap-2 text-sm">
-                {status.modified.length > 0 && (
-                  <div className="flex items-center justify-between p-2 rounded bg-muted/50">
-                    <span className="text-muted-foreground">Modified</span>
-                    <Badge variant="secondary">{status.modified.length}</Badge>
+              <div className="space-y-3">
+                {/* File List - show up to 5 files */}
+                {totalChanges <= 5 ? (
+                  <div className="space-y-2">
+                    {status.modified.map((file) => (
+                      <div key={file} className="flex items-center justify-between text-xs p-2 rounded bg-muted/30">
+                        <span className="font-mono truncate flex-1">{file}</span>
+                        <Badge variant="secondary" className="ml-2">M</Badge>
+                      </div>
+                    ))}
+                    {status.created.map((file) => (
+                      <div key={file} className="flex items-center justify-between text-xs p-2 rounded bg-muted/30">
+                        <span className="font-mono truncate flex-1">{file}</span>
+                        <Badge variant="secondary" className="ml-2">A</Badge>
+                      </div>
+                    ))}
+                    {status.deleted.map((file) => (
+                      <div key={file} className="flex items-center justify-between text-xs p-2 rounded bg-muted/30">
+                        <span className="font-mono truncate flex-1">{file}</span>
+                        <Badge variant="secondary" className="ml-2">D</Badge>
+                      </div>
+                    ))}
+                    {status.not_added.map((file) => (
+                      <div key={file} className="flex items-center justify-between text-xs p-2 rounded bg-muted/30">
+                        <span className="font-mono truncate flex-1">{file}</span>
+                        <Badge variant="secondary" className="ml-2">U</Badge>
+                      </div>
+                    ))}
                   </div>
-                )}
-                {status.created.length > 0 && (
-                  <div className="flex items-center justify-between p-2 rounded bg-muted/50">
-                    <span className="text-muted-foreground">Created</span>
-                    <Badge variant="secondary">{status.created.length}</Badge>
-                  </div>
-                )}
-                {status.deleted.length > 0 && (
-                  <div className="flex items-center justify-between p-2 rounded bg-muted/50">
-                    <span className="text-muted-foreground">Deleted</span>
-                    <Badge variant="secondary">{status.deleted.length}</Badge>
-                  </div>
-                )}
-                {status.not_added.length > 0 && (
-                  <div className="flex items-center justify-between p-2 rounded bg-muted/50">
-                    <span className="text-muted-foreground">Untracked</span>
-                    <Badge variant="secondary">{status.not_added.length}</Badge>
-                  </div>
+                ) : (
+                  <>
+                    <div className="grid grid-cols-2 gap-2 text-sm">
+                      {status.modified.length > 0 && (
+                        <div className="flex items-center justify-between p-2 rounded bg-muted/50">
+                          <span className="text-muted-foreground">Modified</span>
+                          <Badge variant="secondary">{status.modified.length}</Badge>
+                        </div>
+                      )}
+                      {status.created.length > 0 && (
+                        <div className="flex items-center justify-between p-2 rounded bg-muted/50">
+                          <span className="text-muted-foreground">Created</span>
+                          <Badge variant="secondary">{status.created.length}</Badge>
+                        </div>
+                      )}
+                      {status.deleted.length > 0 && (
+                        <div className="flex items-center justify-between p-2 rounded bg-muted/50">
+                          <span className="text-muted-foreground">Deleted</span>
+                          <Badge variant="secondary">{status.deleted.length}</Badge>
+                        </div>
+                      )}
+                      {status.not_added.length > 0 && (
+                        <div className="flex items-center justify-between p-2 rounded bg-muted/50">
+                          <span className="text-muted-foreground">Untracked</span>
+                          <Badge variant="secondary">{status.not_added.length}</Badge>
+                        </div>
+                      )}
+                    </div>
+                    <Button variant="outline" size="sm" className="w-full" asChild>
+                      <a href="/commits/new">View All Files</a>
+                    </Button>
+                  </>
                 )}
               </div>
             )}

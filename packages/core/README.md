@@ -151,8 +151,13 @@ Options:
 PR Pilot works without configuration. For customization, create `pr-pilot.config.ts`:
 
 ```typescript
-import { defineConfig } from 'pr-pilot'
+// Simple way (works with npx)
+export default {
+  // ... your config
+}
 
+// Or with type safety (requires @pr-pilot/core installed)
+import { defineConfig } from '@pr-pilot/core'
 export default defineConfig({
   // Commit settings
   commit: {

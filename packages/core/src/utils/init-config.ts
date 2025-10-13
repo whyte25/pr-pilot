@@ -45,17 +45,19 @@ function generateConfigTemplate(detectedScopes: string[]): string {
       ? `['${detectedScopes.slice(0, 5).join("', '")}']`
       : "['frontend', 'backend', 'docs']"
 
-  return `import { defineConfig } from 'pr-pilot'
-
-/**
+  return `/**
  * PR Pilot Configuration
  * 
  * This file is optional. PR Pilot works great without it!
  * Uncomment and customize the options you need.
  * 
- * Learn more: https://github.com/your-org/pr-pilot#configuration
+ * For TypeScript users with @pr-pilot/core installed:
+ * import { defineConfig } from '@pr-pilot/core'
+ * export default defineConfig({ ... })
+ * 
+ * Learn more: https://github.com/whyte25/pr-pilot#configuration
  */
-export default defineConfig({
+export default {
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // Commit Settings
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -113,21 +115,21 @@ export default defineConfig({
     // Use PR template if exists (.github/PULL_REQUEST_TEMPLATE.md)
     template: true,
   },
-})
+}
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Examples
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 // Example 1: Minimal config (just scopes)
-// export default defineConfig({
+// export default {
 //   commit: {
 //     scopes: ['web', 'api', 'mobile']
 //   }
-// })
+// }
 
 // Example 2: Strict workflow
-// export default defineConfig({
+// export default {
 //   hooks: {
 //     lint: 'pnpm run lint:strict',
 //     format: 'pnpm run format:check', // check only, don't auto-fix
@@ -137,10 +139,10 @@ export default defineConfig({
 //     draft: true, // always create draft PRs
 //     labels: ['needs-review']
 //   }
-// })
+// }
 
 // Example 3: Simple mode for beginners
-// export default defineConfig({
+// export default {
 //   commit: {
 //     format: 'simple', // no type/scope, just message
 //     scopes: false
@@ -149,6 +151,6 @@ export default defineConfig({
 //     lint: false, // skip linting
 //     format: false
 //   }
-// })
+// }
 `
 }

@@ -1,6 +1,6 @@
 {
   "name": "@pr-pilot/mcp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "MCP server for PR Pilot - expose PR automation tools to AI assistants",
   "keywords": [
     "mcp",

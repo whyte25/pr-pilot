@@ -1,14 +1,42 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { ArrowLeft, GitPullRequest, Sparkles } from 'lucide-react'
+import { ArrowLeft, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 import { AppShell } from '@/components/layout/app-shell'
 import { Button } from '@/components/ui/button'
 import { PRForm } from '@/components/prs/pr-form'
 import { PRPreview } from '@/components/prs/pr-preview'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import * as z from 'zod'
+
+const formSchema = z.object({
+  title: z.string().min(1, 'Title is required').max(200, 'Title must be less than 200 characters'),
+  description: z.string().optional(),
+  baseBranch: z.string({
+    required_error: 'Please select a base branch',
+  }),
+  headBranch: z.string({
+    required_error: 'Please select a head branch',
+  }),
+  changeTypes: z.array(z.string()).min(1, 'Select at least one type of change'),
+  draft: z.boolean(),
+})
 
 export default function NewPRPage() {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      title: '',
+      description: '',
+      baseBranch: 'main',
+      headBranch: '',
+      changeTypes: [],
+      draft: false,
+    },
+  })
+
   return (
     <AppShell>
       <div className="flex flex-col gap-6 p-8">
@@ -32,7 +60,7 @@ export default function NewPRPage() {
             </div>
           </div>
 
-          <Button size="lg" className="gap-2">
+          <Button size="lg" className="gap-2" disabled>
             <Sparkles className="h-4 w-4" />
             AI Generate
           </Button>
@@ -46,7 +74,7 @@ export default function NewPRPage() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.1 }}
           >
-            <PRForm />
+            <PRForm form={form} />
           </motion.div>
 
           {/* Right: Preview */}
@@ -55,7 +83,7 @@ export default function NewPRPage() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <PRPreview />
+            <PRPreview form={form} />
           </motion.div>
         </div>
       </div>

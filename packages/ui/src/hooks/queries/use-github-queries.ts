@@ -1,5 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
-import { listPullRequests, getRepoDetails, listBranches } from '@/services/github.actions'
+import {
+  listPullRequests,
+  getPullRequest,
+  getRepoDetails,
+  listBranches,
+} from '@/services/github.actions'
 import { queryKeys } from '@/constants/query-keys'
 
 /**
@@ -15,6 +20,23 @@ export function usePullRequests(state: 'open' | 'closed' | 'all' = 'open') {
       }
       return result.data
     },
+  })
+}
+
+/**
+ * Hook to get a single pull request
+ */
+export function usePullRequest(prNumber: number) {
+  return useQuery({
+    queryKey: queryKeys.github.pr(prNumber),
+    queryFn: async () => {
+      const result = await getPullRequest(prNumber)
+      if (!result.success) {
+        throw new Error(result.error)
+      }
+      return result.data
+    },
+    enabled: !!prNumber && prNumber > 0,
   })
 }
 

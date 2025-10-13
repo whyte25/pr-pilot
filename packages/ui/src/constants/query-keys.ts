@@ -20,6 +20,7 @@ export const queryKeys = {
     all: ['github'] as const,
     repo: () => [...queryKeys.github.all, 'repo'] as const,
     prs: (state?: 'open' | 'closed' | 'all') => [...queryKeys.github.all, 'prs', state] as const,
+    pr: (number: number) => [...queryKeys.github.all, 'pr', number] as const,
     branches: () => [...queryKeys.github.all, 'branches'] as const,
   },
 

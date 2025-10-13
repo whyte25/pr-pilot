@@ -1,5 +1,6 @@
 'use client'
 
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -28,16 +29,15 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { GitPullRequest, Loader2, AlertCircle } from 'lucide-react'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { useCreatePullRequest } from '@/hooks/mutations/use-github-mutations'
+import { useRepoInfo } from '@/hooks/queries/use-git-queries'
+import { useBranches, useRepository } from '@/hooks/queries/use-github-queries'
+import { AlertCircle, GitPullRequest, Loader2 } from 'lucide-react'
+import * as React from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import * as z from 'zod'
-import * as React from 'react'
-import { useBranches, useRepository } from '@/hooks/queries/use-github-queries'
-import { useCreatePullRequest } from '@/hooks/mutations/use-github-mutations'
-import { useRepoInfo } from '@/hooks/queries/use-git-queries'
-import { Alert, AlertDescription } from '@/components/ui/alert'
 const formSchema = z.object({
   title: z.string().min(1, 'Title is required').max(200, 'Title must be less than 200 characters'),
   description: z.string().optional(),
@@ -47,42 +47,60 @@ const formSchema = z.object({
   headBranch: z.string({
     required_error: 'Please select a head branch',
   }),
+  changeTypes: z.array(z.string()).min(1, 'Select at least one type of change'),
   draft: z.boolean(),
 })
 
-export function PRForm() {
+const CHANGE_TYPES = [
+  { value: 'bugfix', label: 'Bug fix' },
+  { value: 'feature', label: 'New feature' },
+  { value: 'breaking', label: 'Breaking change' },
+  { value: 'docs', label: 'Documentation' },
+  { value: 'refactor', label: 'Code refactoring' },
+  { value: 'perf', label: 'Performance improvement' },
+] as const
+
+interface PRFormProps {
+  form: ReturnType<typeof useForm<z.infer<typeof formSchema>>>
+}
+
+export function PRForm({ form }: PRFormProps) {
   // Fetch data
   const { data: branches, isLoading: branchesLoading, error: branchesError } = useBranches()
   const { data: repo, isLoading: repoLoading } = useRepository()
   const { data: repoInfo } = useRepoInfo()
   const createPR = useCreatePullRequest()
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      title: '',
-      description: '',
-      baseBranch: repo?.defaultBranch || 'main',
-      headBranch: repoInfo?.branch || '',
-      draft: false,
-    },
-  })
+  // Set defaults when data loads (only once)
+  const defaultsSet = React.useRef(false)
+  if (!defaultsSet.current && repo?.defaultBranch && repoInfo?.branch) {
+    form.setValue('baseBranch', repo.defaultBranch)
+    form.setValue('headBranch', repoInfo.branch)
+    defaultsSet.current = true
+  }
 
-  // Update default values when data loads
-  React.useEffect(() => {
-    if (repo?.defaultBranch && !form.getValues('baseBranch')) {
-      form.setValue('baseBranch', repo.defaultBranch)
-    }
-    if (repoInfo?.branch && !form.getValues('headBranch')) {
-      form.setValue('headBranch', repoInfo.branch)
-    }
-  }, [repo, repoInfo, form])
+  // Build PR body with proper format
+  function buildPRBody(values: z.infer<typeof formSchema>): string {
+    let body = '## Description\n\n'
+    body += values.description || 'This PR includes the following changes:\n'
+    body += '\n\n## Type of Change\n\n'
+
+    // Add change type checkboxes
+    CHANGE_TYPES.forEach((type) => {
+      const checked = values.changeTypes.includes(type.value) ? 'x' : ' '
+      body += `- [${checked}] ${type.label}\n`
+    })
+
+    return body
+  }
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
+      const prBody = buildPRBody(values)
+
       const pr = await createPR.mutateAsync({
         title: values.title,
-        body: values.description,
+        body: prBody,
         head: values.headBranch,
         base: values.baseBranch,
         draft: values.draft,
@@ -140,9 +158,22 @@ export function PRForm() {
                     <FormLabel>Base Branch *</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value} disabled={isLoading}>
                       <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder={branchesLoading ? "Loading..." : "Select base branch"} />
-                        </SelectTrigger>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <SelectTrigger className="max-w-full">
+                                <SelectValue
+                                  placeholder={
+                                    branchesLoading ? 'Loading...' : 'Select base branch'
+                                  }
+                                />
+                              </SelectTrigger>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>{field.value || 'Select base branch'}</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
                       </FormControl>
                       <SelectContent>
                         {branches?.map((branch) => (
@@ -166,9 +197,22 @@ export function PRForm() {
                     <FormLabel>Head Branch *</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value} disabled={isLoading}>
                       <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder={branchesLoading ? "Loading..." : "Select head branch"} />
-                        </SelectTrigger>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <SelectTrigger className="max-w-full">
+                                <SelectValue
+                                  placeholder={
+                                    branchesLoading ? 'Loading...' : 'Select head branch'
+                                  }
+                                />
+                              </SelectTrigger>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>{field.value || 'Select head branch'}</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
                       </FormControl>
                       <SelectContent>
                         {branches?.map((branch) => (
@@ -211,11 +255,59 @@ export function PRForm() {
                   <FormControl>
                     <Textarea
                       placeholder="Detailed description of changes..."
-                      rows={8}
+                      rows={6}
                       {...field}
                     />
                   </FormControl>
                   <FormDescription>Supports Markdown formatting</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Change Types */}
+            <FormField
+              control={form.control}
+              name="changeTypes"
+              render={() => (
+                <FormItem>
+                  <div className="mb-4">
+                    <FormLabel>Type of Change *</FormLabel>
+                    <FormDescription>Select all that apply</FormDescription>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    {CHANGE_TYPES.map((type) => (
+                      <FormField
+                        key={type.value}
+                        control={form.control}
+                        name="changeTypes"
+                        render={({ field }) => {
+                          return (
+                            <FormItem
+                              key={type.value}
+                              className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-3"
+                            >
+                              <FormControl>
+                                <Checkbox
+                                  checked={field.value?.includes(type.value)}
+                                  onCheckedChange={(checked) => {
+                                    return checked
+                                      ? field.onChange([...field.value, type.value])
+                                      : field.onChange(
+                                          field.value?.filter((value) => value !== type.value)
+                                        )
+                                  }}
+                                />
+                              </FormControl>
+                              <FormLabel className="font-normal cursor-pointer">
+                                {type.label}
+                              </FormLabel>
+                            </FormItem>
+                          )
+                        }}
+                      />
+                    ))}
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}

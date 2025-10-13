@@ -82,6 +82,45 @@ export async function listPullRequests(params: {
 }
 
 /**
+ * Get a single pull request
+ */
+export async function getPullRequest(params: {
+  owner: string
+  repo: string
+  prNumber: number
+  token?: string
+}) {
+  const client = getOctokit(params.token)
+
+  const response = await client.pulls.get({
+    owner: params.owner,
+    repo: params.repo,
+    pull_number: params.prNumber,
+  })
+
+  const pr = response.data
+
+  return {
+    number: pr.number,
+    title: pr.title,
+    body: pr.body,
+    state: pr.state,
+    draft: pr.draft,
+    author: pr.user?.login || 'unknown',
+    createdAt: pr.created_at,
+    updatedAt: pr.updated_at,
+    url: pr.html_url,
+    head: pr.head.ref,
+    base: pr.base.ref,
+    mergeable: pr.mergeable,
+    changedFiles: pr.changed_files,
+    additions: pr.additions,
+    deletions: pr.deletions,
+    commits: pr.commits,
+  }
+}
+
+/**
  * Get repository information
  */
 export async function getRepository(params: { owner: string; repo: string; token?: string }) {

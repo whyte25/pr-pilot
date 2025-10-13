@@ -3,6 +3,7 @@
 import {
   createPullRequest as ghCreatePR,
   listPullRequests as ghListPRs,
+  getPullRequest as ghGetPR,
   getRepository,
   listBranches as ghListBranches,
   parseRepoUrl,
@@ -95,6 +96,45 @@ export async function listPullRequests(state: 'open' | 'closed' | 'all' = 'open'
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Failed to list pull requests',
+    }
+  }
+}
+
+/**
+ * Get a single pull request
+ */
+export async function getPullRequest(prNumber: number) {
+  try {
+    const token = await getGitHubTokenServer()
+    if (!token) {
+      return {
+        success: false,
+        error: 'GitHub token not found. Please authenticate in settings.',
+      }
+    }
+
+    const repoInfo = await getRepoInfo()
+    const parsed = parseRepoUrl(repoInfo.remote)
+
+    if (!parsed) {
+      return {
+        success: false,
+        error: 'Could not parse repository URL',
+      }
+    }
+
+    const pr = await ghGetPR({
+      owner: parsed.owner,
+      repo: parsed.repo,
+      prNumber,
+      token,
+    })
+
+    return { success: true, data: pr }
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to get pull request',
     }
   }
 }

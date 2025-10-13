@@ -75,10 +75,22 @@ export async function getChangedFiles(baseDir?: string) {
   ]
 
   // Get diff stats for each file
+  const gitInstance = await getGitAsync(baseDir)
   const filesWithStats = await Promise.all(
     files.map(async (file) => {
       try {
-        const diff = await getGit(baseDir).diff(['--numstat', 'HEAD', '--', file.path])
+        // Try different strategies to get numstat
+        let diff = ''
+        try {
+          diff = await gitInstance.diff(['--numstat', '--', file.path])
+        } catch {
+          try {
+            diff = await gitInstance.diff(['--numstat', 'HEAD', '--', file.path])
+          } catch {
+            diff = await gitInstance.raw(['diff', '--numstat', '--', file.path])
+          }
+        }
+
         const match = diff.match(/^(\d+)\s+(\d+)/)
 
         return {

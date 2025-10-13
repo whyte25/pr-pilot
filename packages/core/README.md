@@ -1,46 +1,25 @@
-# ✈️ PR Pilot
+# @pr-pilot/core
 
-> Your PR autopilot - create pull requests with ease
-
-PR Pilot automates the tedious parts of creating pull requests. It detects your project setup, guides you through commits, and creates PRs automatically.
-
-## Features
-
-- **Zero config** - Works immediately in any Git repo
-- **Smart caching** - Remembers your preferences
-- **Auto-generates config** - With examples and comments
-- **GitHub CLI auto-install** - One-click installation
-- **Conventional commits** - Optional support with auto-suggestions
-- **Pre-commit hooks** - Runs lint/format automatically
-- **PR-only mode** - Create PRs from existing commits without new changes
-- **Multiple change types** - Select multiple types per PR (bugfix, feature, docs, etc.)
-- **Flexible base branch** - Choose which branch to create PR against (main, dev, custom)
-- **Beginner friendly** - Simple mode asks just one question
-- **Powerful** - Full customization for advanced users
-
-## Quick Start
-
-```bash
-# Run in your project
-npx pr-pilot
-```
+CLI tool that automates the full PR workflow: commit formatting, pre-commit hooks, pushing, and PR creation.
 
 ## Installation
 
-### One-time use (recommended)
+### One-Time Use (Recommended)
 
 ```bash
 npx pr-pilot
 ```
 
-### Global install
+No installation needed. npx downloads and runs the latest version.
+
+### Global Install
 
 ```bash
 npm install -g pr-pilot
 pr-pilot
 ```
 
-### Project install
+### Project-Local Install
 
 ```bash
 pnpm add -D pr-pilot
@@ -58,9 +37,9 @@ Add to `package.json`:
 
 ## Usage
 
-### Beginner Mode (Simple)
+### Simple Mode
 
-Just run it and answer one question:
+For quick commits without ceremony:
 
 ```bash
 $ pr-pilot
@@ -76,9 +55,9 @@ https://github.com/your-org/repo/pull/123
 Done!
 ```
 
-### Intermediate Mode (Conventional Commits)
+### Conventional Commits Mode
 
-If your project has commitlint, it auto-detects and uses conventional commits:
+Auto-detected when your project has commitlint configured:
 
 ```bash
 $ pr-pilot
@@ -102,59 +81,9 @@ https://github.com/your-org/repo/pull/124
 Done!
 ```
 
-### Force Conventional Mode
-
-```bash
-pr-pilot --conventional
-```
-
-### Multiple Change Types
-
-All modes now support selecting multiple change types for your PR:
-
-```bash
-? Type of change (select all that apply):
-❯ ◉ Bug fix
-  ◉ New feature
-  ◯ Breaking change
-  ◉ Documentation
-  ◉ Code refactoring
-  ◯ Performance improvement
-```
-
-**Use Space to select/deselect, Enter to confirm**
-
-The PR body will show checked boxes for selected types:
-
-```markdown
-## Type of Change
-
-- [x] Bug fix
-- [x] New feature
-- [ ] Breaking change
-- [x] Documentation
-- [x] Code refactoring
-- [ ] Performance improvement
-```
-
-### CLI Options
-
-```bash
-pr-pilot [options]
-
-Options:
-  --conventional    Use conventional commits
-  --simple          Use simple commit message
-  --no-lint         Skip linting
-  --no-format       Skip formatting
-  --draft           Create draft PR
-  -h, --help        Show help
-  -v, --version     Show version
-```
-
 ### PR-Only Mode
 
-Create a PR from existing commits without making new changes:
+Create a PR from existing commits when your working tree is clean:
 
 ```bash
 $ pr-pilot
@@ -195,18 +124,31 @@ Checking commits ahead of main...
 Done!
 ```
 
-**Key Features:**
+**Key capabilities:**
 
 - Select base branch (main, master, develop, dev, or custom)
-- Shows all commits ahead of base branch
-- Choose multiple change types (bugfix, feature, docs, etc.)
+- View all commits ahead of base branch
+- Multi-select change types (bugfix, feature, docs, etc.)
 - Validates branch existence before proceeding
+
+## CLI Options
+
+```bash
+pr-pilot [options]
+
+Options:
+  --conventional    Force conventional commits mode
+  --simple          Force simple commit message mode
+  --no-lint         Skip linting
+  --no-format       Skip formatting
+  --draft           Create draft PR
+  -h, --help        Show help
+  -v, --version     Show version
+```
 
 ## Configuration
 
-PR Pilot works without configuration, but you can customize it:
-
-### Create `pr-pilot.config.ts`
+PR Pilot works without configuration. For customization, create `pr-pilot.config.ts`:
 
 ```typescript
 import { defineConfig } from 'pr-pilot'
@@ -215,7 +157,7 @@ export default defineConfig({
   // Commit settings
   commit: {
     format: 'conventional', // 'conventional' | 'simple'
-    scopes: ['web', 'api', 'docs'], // or 'auto' to detect
+    scopes: ['web', 'api', 'docs'], // or 'auto' to detect from monorepo
     maxLength: 100,
   },
 
@@ -245,8 +187,9 @@ export default defineConfig({
 
 ### Minimal Config
 
+Override only what you need:
+
 ```typescript
-// Just override what you need
 export default defineConfig({
   commit: {
     scopes: ['frontend', 'backend', 'infra'],
@@ -268,33 +211,33 @@ export default defineConfig({
 
 ## How It Works
 
-### 1. Auto-Detection
+### Auto-Detection
 
-PR Pilot detects:
+PR Pilot inspects your project to determine:
 
-- **Package manager** (pnpm, npm, yarn, bun) from lock files
-- **Commit format** (conventional or simple) from commitlint config
-- **Scopes** from monorepo structure (apps/, packages/, etc.)
-- **Hooks** from package.json scripts (lint, format)
-- **Base branch** from GitHub repo settings
+- **Package manager** — Checks lock files (pnpm-lock.yaml, yarn.lock, package-lock.json)
+- **Commit format** — Looks for commitlint config files
+- **Scopes** — Scans monorepo structure (apps/, packages/ directories)
+- **Hooks** — Reads package.json scripts (lint, format, test)
+- **Base branch** — Queries GitHub API for repository default branch
 
-### 2. Smart Defaults
+### Smart Defaults
 
-- Beginners get simple mode (one question)
-- Projects with commitlint get conventional mode
-- Monorepos get auto-detected scopes
-- Lint/format run automatically if scripts exist
+- Projects without commitlint use simple mode
+- Projects with commitlint use conventional commits mode
+- Monorepos get auto-detected scopes from directory structure
+- Lint/format scripts run automatically if they exist in package.json
 
-### 3. Graceful Fallbacks
+### Graceful Fallbacks
 
-- No GitHub CLI? Shows manual PR link
+- No GitHub CLI? Displays manual PR creation link
 - No lint script? Skips silently
-- No commitlint? Uses simple mode
-- Everything degrades gracefully
+- No commitlint? Falls back to simple mode
+- Everything degrades without breaking the workflow
 
 ## Examples
 
-### Example 1: Simple Project
+### Simple Project
 
 ```bash
 # No config needed
@@ -303,7 +246,7 @@ What did you change? Added dark mode
 Done!
 ```
 
-### Example 2: Monorepo with Conventional Commits
+### Monorepo with Conventional Commits
 
 ```bash
 # Auto-detects scopes from apps/ and packages/
@@ -314,7 +257,7 @@ Subject? add dark mode toggle
 Done!
 ```
 
-### Example 3: Custom Workflow
+### Custom Workflow
 
 ```typescript
 // pr-pilot.config.ts
@@ -341,24 +284,24 @@ Done!
 ## Requirements
 
 - **Node.js** >= 18
-- **Git** repository with remote
-- **GitHub CLI** (optional, for PR creation)
-  - Install: `brew install gh` or see [cli.github.com](https://cli.github.com)
+- **Git** repository with configured remote
+- **GitHub CLI** (optional, auto-installed if missing)
+  - Install: `brew install gh` or visit [cli.github.com](https://cli.github.com)
   - Authenticate: `gh auth login`
 
 ## Troubleshooting
 
 ### "No changes to commit"
 
-Your working tree is clean. Make some changes first.
+Your working tree is clean. Stage changes with `git add` or make new edits.
 
 ### "GitHub CLI not authenticated"
 
-Run `gh auth login` to authenticate.
+Run `gh auth login` to authenticate with GitHub.
 
 ### "No scopes detected"
 
-Add scopes to your config:
+Add scopes manually to your config:
 
 ```typescript
 export default defineConfig({
@@ -370,7 +313,7 @@ export default defineConfig({
 
 ### Lint/format not running
 
-Check your package.json has these scripts:
+Ensure your package.json includes these scripts:
 
 - `lint` or `lint:fix`
 - `format` or `format:fix`
@@ -400,21 +343,11 @@ export default defineConfig({
 
 ### vs Other Tools
 
-- **Simpler** than commitizen (no setup needed)
-- **Smarter** than git aliases (detects project setup)
-- **Faster** than manual workflow (automates everything)
-- **Flexible** for all skill levels (beginner to advanced)
-
-## Contributing
-
-We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md).
+- **Simpler than commitizen** — No setup, works immediately
+- **Smarter than git aliases** — Detects project structure
+- **Faster than manual workflow** — Automates every step
+- **Flexible for all levels** — Beginner to advanced users
 
 ## License
 
 MIT © Fas
-
-## Links
-
-- [Documentation](https://github.com/whyte25/pr-pilot)
-- [Issues](https://github.com/whyte25/pr-pilot/issues)
-- [Changelog](CHANGELOG.md)

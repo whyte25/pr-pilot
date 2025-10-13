@@ -1,96 +1,37 @@
 # pr-pilot-mcp
 
-MCP (Model Context Protocol) server for PR Pilot - expose PR automation tools to AI assistants.
+MCP (Model Context Protocol) server that exposes PR Pilot's automation tools to AI assistants like Claude, Cursor, and Windsurf.
 
-**Works with any MCP-compatible client:**
+## What This Does
 
-- Claude Desktop
-- Cursor
-- Windsurf
-- Cline
-- Continue
-- Any other MCP client
+Provides four tools that AI assistants can invoke to automate Git workflows:
 
-## Features
-
-Provides 4 powerful tools for AI assistants:
-
-### 1. `analyze_changes`
-
-Analyze git changes and suggest a conventional commit message.
-
-**Parameters:**
-
-- `cwd` (optional): Working directory
-
-**Returns:**
-
-- Suggested commit message with type, scope, and description
-- File statistics
-- List of changed files
-
-### 2. `create_commit`
-
-Create a git commit with conventional commits format.
-
-**Parameters:**
-
-- `message` (required): Commit message or description
-- `type` (optional): Commit type (feat, fix, docs, etc.)
-- `scope` (optional): Commit scope
-- `breaking` (optional): Whether this is a breaking change
-- `cwd` (optional): Working directory
-
-**Returns:**
-
-- Commit hash
-- Full commit message
-- Author and date
-
-### 3. `create_pr`
-
-Create a GitHub pull request.
-
-**Parameters:**
-
-- `title` (required): PR title
-- `body` (optional): PR description
-- `base` (optional): Base branch (default: main)
-- `draft` (optional): Create as draft PR
-- `cwd` (optional): Working directory
-
-**Returns:**
-
-- PR URL
-- PR details
-
-### 4. `validate_commit`
-
-Validate a commit message against conventional commits standards.
-
-**Parameters:**
-
-- `message` (required): Commit message to validate
-
-**Returns:**
-
-- Validation result (valid/invalid)
-- List of errors and warnings
-- Detected format (conventional/simple)
+| Tool              | Purpose                                   | Key Parameters                         |
+| ----------------- | ----------------------------------------- | -------------------------------------- |
+| `analyze_changes` | Suggest conventional commit from git diff | `cwd` (optional)                       |
+| `create_commit`   | Create a formatted commit                 | `message`, `type`, `scope`, `breaking` |
+| `create_pr`       | Open a GitHub pull request                | `title`, `body`, `base`, `draft`       |
+| `validate_commit` | Check commit message format               | `message`                              |
 
 ## Installation
 
-### Global Installation
+### Global Install
 
 ```bash
 npm install -g pr-pilot-mcp
+```
+
+### One-Time Use
+
+```bash
+npx -y pr-pilot-mcp
 ```
 
 ## Configuration
 
 ### Claude Desktop
 
-Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `%APPDATA%\Claude\claude_desktop_config.json` (Windows):
+Edit `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `%APPDATA%\Claude\claude_desktop_config.json` (Windows):
 
 ```json
 {
@@ -105,7 +46,7 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS)
 
 ### Cursor
 
-Add to your Cursor MCP settings:
+Add to Cursor's MCP settings:
 
 ```json
 {
@@ -120,7 +61,7 @@ Add to your Cursor MCP settings:
 
 ### Windsurf
 
-Add to Windsurf MCP configuration:
+Add to Windsurf's MCP configuration:
 
 ```json
 {
@@ -133,24 +74,9 @@ Add to Windsurf MCP configuration:
 }
 ```
 
-### Cline / Continue
+### Other MCP Clients
 
-Add to your MCP settings file:
-
-```json
-{
-  "mcpServers": {
-    "pr-pilot": {
-      "command": "npx",
-      "args": ["-y", "pr-pilot-mcp"]
-    }
-  }
-}
-```
-
-### Any MCP Client
-
-The server runs on stdio and follows the MCP specification, so it works with any compliant client:
+The server runs on stdio and follows the MCP specification. Any compliant client can use it:
 
 ```bash
 # Run directly
@@ -160,9 +86,110 @@ npx pr-pilot-mcp
 pr-pilot-mcp
 ```
 
+## Tools Reference
+
+### `analyze_changes`
+
+Analyzes git changes and suggests a conventional commit message.
+
+**Parameters:**
+
+- `cwd` (string, optional) — Working directory path
+
+**Returns:**
+
+```json
+{
+  "success": true,
+  "analysis": {
+    "type": "feat",
+    "scope": "auth",
+    "description": "add OAuth2 login",
+    "files": ["src/auth/oauth.ts", "src/auth/types.ts"],
+    "stats": {
+      "modified": 2,
+      "created": 1,
+      "deleted": 0,
+      "staged": 3
+    }
+  },
+  "suggestion": "feat(auth): add OAuth2 login"
+}
+```
+
+### `create_commit`
+
+Creates a git commit with conventional format.
+
+**Parameters:**
+
+- `message` (string, required) — Commit message or description
+- `type` (string, optional) — Commit type (feat, fix, docs, style, refactor, perf, test, chore)
+- `scope` (string, optional) — Commit scope
+- `breaking` (boolean, optional) — Mark as breaking change
+
+**Returns:**
+
+```json
+{
+  "success": true,
+  "commit": {
+    "hash": "a1b2c3d",
+    "message": "feat(auth): add OAuth2 login",
+    "author": "John Doe <john@example.com>",
+    "date": "2025-01-13T18:00:00Z"
+  }
+}
+```
+
+### `create_pr`
+
+Creates a GitHub pull request.
+
+**Parameters:**
+
+- `title` (string, required) — PR title
+- `body` (string, optional) — PR description
+- `base` (string, optional) — Base branch (default: main)
+- `draft` (boolean, optional) — Create as draft PR
+- `cwd` (string, optional) — Working directory path
+
+**Returns:**
+
+```json
+{
+  "success": true,
+  "pr": {
+    "url": "https://github.com/owner/repo/pull/123",
+    "title": "feat: add OAuth2 login",
+    "base": "main",
+    "draft": false
+  }
+}
+```
+
+### `validate_commit`
+
+Validates a commit message against conventional commits standards.
+
+**Parameters:**
+
+- `message` (string, required) — Commit message to validate
+
+**Returns:**
+
+```json
+{
+  "valid": true,
+  "errors": [],
+  "warnings": [],
+  "format": "conventional"
+}
+```
+
 ## Example Usage
 
-Once configured, you can ask your AI assistant:
+Once configured, ask your AI assistant:
 
 **Analyze changes:**
 
@@ -188,13 +215,15 @@ Create a PR titled "feat: add user authentication" to the dev branch
 Is this a valid commit message: "feat(auth): add login page"?
 ```
 
-The AI will use the appropriate PR Pilot tools to help you!
+The AI will invoke the appropriate PR Pilot tools automatically.
 
 ## Requirements
 
-- Node.js >= 20.8.1
-- Git
-- GitHub CLI (for `create_pr` tool)
+- **Node.js** >= 20.8.1
+- **Git** repository
+- **GitHub CLI** (for `create_pr` tool)
+  - Install: `brew install gh` or visit [cli.github.com](https://cli.github.com)
+  - Authenticate: `gh auth login`
 
 ## Development
 

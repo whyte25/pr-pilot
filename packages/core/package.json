@@ -37,12 +37,20 @@
     "ora": "^8.1.1",
     "picocolors": "^1.1.1",
     "simple-git": "^3.27.0",
-    "typescript": "^5.7.3",
     "zod": "^3.24.2"
+  },
+  "peerDependencies": {
+    "typescript": ">=5.0.0"
+  },
+  "peerDependenciesMeta": {
+    "typescript": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@types/node": "^22.13.10",
-    "tsup": "^8.5.0"
+    "tsup": "^8.5.0",
+    "typescript": "^5.7.3"
   },
   "engines": {
     "node": ">=20.8.1"

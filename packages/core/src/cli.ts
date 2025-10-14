@@ -160,7 +160,7 @@ ${pc.bold('Usage:')}
 
 ${pc.bold('Commands:')}
   ui                Open PR Pilot UI in browser
-  init              Generate pr-pilot.config.ts with smart defaults
+  init              Generate .pr-pilotrc.json with smart defaults
 
 ${pc.bold('Options:')}
   --conventional    Use conventional commits (type, scope, subject)
@@ -176,7 +176,7 @@ ${pc.bold('Examples:')}
   ${pc.dim('$')} pr-pilot ui                 ${pc.dim('# Open beautiful web UI')}
   ${pc.dim('$')} pr-pilot ui --port 4000     ${pc.dim('# Use custom port')}
   ${pc.dim('$')} pr-pilot                    ${pc.dim('# First run: asks your preference, then caches it')}
-  ${pc.dim('$')} pr-pilot init              ${pc.dim('# Generate config file with examples')}
+  ${pc.dim('$')} pr-pilot init              ${pc.dim('# Generate .pr-pilotrc.json config')}
   ${pc.dim('$')} pr-pilot --conventional     ${pc.dim('# Override cached preference')}
   ${pc.dim('$')} pr-pilot --draft            ${pc.dim('# Create draft PR')}
   ${pc.dim('$')} pr-pilot --no-lint          ${pc.dim('# Skip linting this time')}
@@ -186,7 +186,7 @@ ${pc.bold('First Run:')}
   Use --simple or --conventional flags to override anytime.
 
 ${pc.bold('Configuration:')}
-  Run ${pc.cyan('pr-pilot init')} to generate pr-pilot.config.ts
+  Run ${pc.cyan('pr-pilot init')} to generate .pr-pilotrc.json
   Or create it manually for advanced customization
   See: https://github.com/whyte25/pr-pilot#configuration
 

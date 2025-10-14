@@ -1,0 +1,26 @@
+# Source files - not needed in published package
+src/
+bin/*.ts
+tsconfig.json
+bin/tsconfig.json
+next.config.ts
+tailwind.config.ts
+postcss.config.mjs
+components.json
+eslint.config.mjs
+
+# Development files
+.turbo/
+.next/*
+!.next/standalone/
+!.next/static/
+node_modules/
+.env*
+.DS_Store
+
+# Documentation (keep README)
+CHANGELOG.md
+
+# Build artifacts we don't need
+*.tsbuildinfo
+next-env.d.ts

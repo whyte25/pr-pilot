@@ -4,17 +4,16 @@
   "private": false,
   "type": "module",
   "bin": {
-    "pr-pilot-ui": "./bin/pr-pilot-ui.js"
+    "pr-pilot-ui": "./dist/bin/pr-pilot-ui.js"
   },
   "files": [
-    "bin",
-    ".next/standalone",
-    ".next/static",
-    "public"
+    "dist"
   ],
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
+    "build": "next build --turbopack && pnpm build:bin && pnpm build:prepare",
+    "build:bin": "tsc bin/pr-pilot-ui.ts --outDir bin/dist --module Node16 --moduleResolution node16 --target ESNext --esModuleInterop --skipLibCheck && chmod +x bin/dist/pr-pilot-ui.js",
+    "build:prepare": "node scripts/prepare-publish.js",
     "start": "next start",
     "lint": "eslint"
   },
@@ -62,6 +61,7 @@
     "next": "15.5.4",
     "next-themes": "^0.4.6",
     "nuqs": "^2.7.1",
+    "open": "^10.2.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-hook-form": "^7.65.0",

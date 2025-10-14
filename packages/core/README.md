@@ -148,53 +148,50 @@ Options:
 
 ## Configuration
 
-PR Pilot works without configuration. For customization, create `pr-pilot.config.ts`:
+PR Pilot works without configuration. For customization, run `pr-pilot init` or create `.pr-pilotrc.json`:
 
-```typescript
-// Simple way (works with npx)
-export default {
-  // ... your config
+```json
+{
+  "commit": {
+    "format": "conventional",
+    "scopes": ["web", "api", "docs"],
+    "maxLength": 100
+  },
+  "hooks": {
+    "lint": true,
+    "format": true,
+    "test": false
+  },
+  "pr": {
+    "base": "auto",
+    "draft": false,
+    "labels": [],
+    "reviewers": [],
+    "template": true
+  }
 }
-
-// Or with type safety (requires @pr-pilot/core installed)
-import { defineConfig } from '@pr-pilot/core'
-export default defineConfig({
-  // Commit settings
-  commit: {
-    format: 'conventional', // 'conventional' | 'simple'
-    scopes: ['web', 'api', 'docs'], // or 'auto' to detect from monorepo
-    maxLength: 100,
-  },
-
-  // Pre-commit hooks
-  hooks: {
-    lint: 'pnpm run lint:fix', // or true to auto-detect
-    format: true, // auto-detects format command
-    test: false, // disabled by default
-  },
-
-  // Git settings
-  git: {
-    promptForBranch: 'always', // 'always' | 'protected' | 'never'
-    protectedBranches: ['main', 'master', 'develop', 'dev'],
-  },
-
-  // PR settings
-  pr: {
-    base: 'auto', // or 'main', 'dev', etc.
-    draft: false,
-    labels: ['auto-created'],
-    reviewers: ['@team-leads'],
-    template: true, // use .github/PULL_REQUEST_TEMPLATE.md
-  },
-})
 ```
 
 ### Minimal Config
 
 Override only what you need:
 
+```json
+{
+  "commit": {
+    "scopes": ["frontend", "backend", "infra"]
+  }
+}
+```
+
+### TypeScript Config (Advanced)
+
+If you have `@pr-pilot/core` installed in your project, you can use TypeScript for type safety:
+
 ```typescript
+// pr-pilot.config.ts
+import { defineConfig } from '@pr-pilot/core'
+
 export default defineConfig({
   commit: {
     scopes: ['frontend', 'backend', 'infra'],
@@ -264,19 +261,19 @@ Done!
 
 ### Custom Workflow
 
-```typescript
-// pr-pilot.config.ts
-export default defineConfig({
-  hooks: {
-    lint: 'pnpm run lint:strict',
-    format: true,
-    test: 'pnpm run test:changed',
+```json
+// .pr-pilotrc.json
+{
+  "hooks": {
+    "lint": "pnpm run lint:strict",
+    "format": true,
+    "test": "pnpm run test:changed"
   },
-  pr: {
-    draft: true,
-    labels: ['needs-review'],
-  },
-})
+  "pr": {
+    "draft": true,
+    "labels": ["needs-review"]
+  }
+}
 ```
 
 ```bash
@@ -308,12 +305,12 @@ Run `gh auth login` to authenticate with GitHub.
 
 Add scopes manually to your config:
 
-```typescript
-export default defineConfig({
-  commit: {
-    scopes: ['frontend', 'backend', 'docs'],
-  },
-})
+```json
+{
+  "commit": {
+    "scopes": ["frontend", "backend", "docs"]
+  }
+}
 ```
 
 ### Lint/format not running
@@ -325,13 +322,13 @@ Ensure your package.json includes these scripts:
 
 Or specify custom commands:
 
-```typescript
-export default defineConfig({
-  hooks: {
-    lint: 'eslint --fix .',
-    format: 'prettier --write .',
-  },
-})
+```json
+{
+  "hooks": {
+    "lint": "eslint --fix .",
+    "format": "prettier --write ."
+  }
+}
 ```
 
 ## Comparison

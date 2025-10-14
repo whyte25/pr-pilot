@@ -10,15 +10,16 @@ import { detectHooks } from '../detectors/hooks.js'
  */
 export async function loadConfig(cwd: string): Promise<Config> {
   // Search for user config
+  // Prioritize JSON formats to avoid TypeScript dependency issues when using npx
   const explorer = cosmiconfig('pr-pilot', {
     searchPlaces: [
-      'pr-pilot.config.ts',
+      '.pr-pilotrc.json',
+      '.pr-pilotrc',
+      'package.json', // Can embed in package.json
       'pr-pilot.config.js',
       'pr-pilot.config.cjs',
       'pr-pilot.config.mjs',
-      '.pr-pilotrc',
-      '.pr-pilotrc.json',
-      'package.json', // Can embed in package.json
+      'pr-pilot.config.ts', // Last resort - requires TypeScript in user's project
     ],
   })
 

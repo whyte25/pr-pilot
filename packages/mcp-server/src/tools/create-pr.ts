@@ -3,7 +3,7 @@ import { Tool } from '@modelcontextprotocol/sdk/types.js'
 export const createPRTool: Tool = {
   name: 'create_pr',
   description:
-    'Create a GitHub pull request from the current branch. Requires GitHub CLI to be installed and authenticated.',
+    "Prepare a GitHub pull request from the current branch. Returns the commands needed to push the branch and create the PR. The AI assistant should then execute these commands using the editor's command execution tool. Requires GitHub CLI to be installed and authenticated.",
   inputSchema: {
     type: 'object',
     properties: {

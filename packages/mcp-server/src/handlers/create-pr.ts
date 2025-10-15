@@ -37,27 +37,33 @@ export async function createPR(cwd: string, options: CreatePROptions) {
   }
 
   // Check if branch is pushed
+  let needsPush = false
   try {
     await git.fetch()
     const branches = await git.branch(['-r'])
     const remoteBranch = `origin/${currentBranch}`
-
-    if (!branches.all.includes(remoteBranch)) {
-      // Push branch
-      await git.push('origin', currentBranch, ['--set-upstream'])
-    }
+    needsPush = !branches.all.includes(remoteBranch)
   } catch (error) {
     return {
       success: false,
-      message: `Failed to push branch: ${error}`,
+      message: `Failed to check remote branch: ${error}`,
     }
   }
 
+  // Build commands to execute
+  // Use single quotes to avoid shell injection vulnerabilities
+  const escapeShell = (str: string) => `'${str.replace(/'/g, "'\\''")}'`
+  const commands = []
+
+  if (needsPush) {
+    commands.push(`git push origin ${currentBranch} --set-upstream`)
+  }
+
   // Build gh pr create command
-  const args = ['pr', 'create', '--title', title]
+  const args = ['gh', 'pr', 'create', '--title', escapeShell(title)]
 
   if (body) {
-    args.push('--body', body)
+    args.push('--body', escapeShell(body))
   }
 
   if (base) {
@@ -68,29 +74,21 @@ export async function createPR(cwd: string, options: CreatePROptions) {
     args.push('--draft')
   }
 
-  try {
-    const { stdout } = await execAsync(`gh ${args.map((a) => `"${a}"`).join(' ')}`, {
-      cwd,
-    })
+  commands.push(args.join(' '))
 
-    // Extract PR URL from output
-    const urlMatch = stdout.match(/https:\/\/github\.com\/[^\s]+/)
-    const prUrl = urlMatch ? urlMatch[0] : null
-
-    return {
-      success: true,
-      pr: {
-        url: prUrl,
-        title,
-        base: base || 'main',
-        draft: draft || false,
-      },
-    }
-  } catch (error) {
-    const message = error instanceof Error ? error.message : String(error)
-    return {
-      success: false,
-      message: `Failed to create PR: ${message}`,
-    }
+  return {
+    success: true,
+    needsPush,
+    currentBranch,
+    commands,
+    message: needsPush
+      ? `Branch '${currentBranch}' needs to be pushed. Run the commands below to create the PR.`
+      : `Branch '${currentBranch}' is already pushed. Run the command below to create the PR.`,
+    instructions: {
+      title,
+      base: base || 'main',
+      draft: draft || false,
+      branch: currentBranch,
+    },
   }
 }

@@ -4,20 +4,11 @@ let git: SimpleGit | null = null
 let gitRoot: string | null = null
 
 /**
- * Find the Git root directory
+ * Get the working directory
+ * When running via npx, use the directory where the user ran the command
  */
-async function findGitRoot(startDir?: string): Promise<string> {
-  if (gitRoot) return gitRoot
-
-  const tempGit = simpleGit(startDir || process.cwd())
-  try {
-    const root = await tempGit.revparse(['--show-toplevel'])
-    gitRoot = root.trim()
-    return gitRoot
-  } catch {
-    // Fallback to current directory
-    return startDir || process.cwd()
-  }
+function getWorkingDirectory(): string {
+  return process.env.PR_PILOT_CWD || process.cwd()
 }
 
 /**
@@ -26,7 +17,7 @@ async function findGitRoot(startDir?: string): Promise<string> {
  */
 export async function getGitAsync(baseDir?: string): Promise<SimpleGit> {
   if (!git || !gitRoot) {
-    const startDir = baseDir || process.cwd()
+    const startDir = baseDir || getWorkingDirectory()
     const tempGit = simpleGit(startDir)
 
     try {
@@ -34,7 +25,7 @@ export async function getGitAsync(baseDir?: string): Promise<SimpleGit> {
       const root = await tempGit.revparse(['--show-toplevel'])
       gitRoot = root.trim()
       git = simpleGit(gitRoot)
-    } catch (error) {
+    } catch {
       // Fallback to current directory if not in a Git repo
       git = simpleGit(startDir)
     }
@@ -47,7 +38,7 @@ export async function getGitAsync(baseDir?: string): Promise<SimpleGit> {
  */
 export function getGit(baseDir?: string): SimpleGit {
   if (!git) {
-    git = simpleGit(baseDir || process.cwd())
+    git = simpleGit(baseDir || getWorkingDirectory())
   }
   return git
 }
@@ -251,7 +242,7 @@ export async function getFileDiff(filePath: string, baseDir?: string): Promise<s
         ]
 
         return diffLines.join('\n')
-      } catch (error) {
+      } catch {
         return ''
       }
     }
@@ -277,7 +268,7 @@ export async function getFileDiff(filePath: string, baseDir?: string): Promise<s
     }
 
     return ''
-  } catch (error) {
+  } catch {
     return ''
   }
 }

@@ -17,6 +17,10 @@
 /.next/
 /out/
 
+# Keep standalone build for npm publish
+!/.next/standalone/
+!/.next/static/
+
 # production
 /build
 

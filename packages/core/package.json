@@ -1,6 +1,6 @@
 {
   "name": "@pr-pilot/core",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Core library and CLI for PR Pilot - your PR autopilot",
   "keywords": [
     "git",

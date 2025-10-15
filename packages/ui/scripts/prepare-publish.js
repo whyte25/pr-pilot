@@ -5,7 +5,7 @@
  * This dramatically reduces package size
  */
 
-import { cpSync, mkdirSync, rmSync } from 'fs'
+import { cpSync, mkdirSync, rmSync, existsSync, readdirSync } from 'fs'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
 
@@ -14,9 +14,48 @@ const __dirname = dirname(__filename)
 const rootDir = join(__dirname, '..')
 
 const distDir = join(rootDir, 'dist')
-const standaloneDir = join(rootDir, '.next/standalone/open-source/pr-pilot/packages/ui')
+
+// Find the standalone directory dynamically
+// Next.js creates it with the full workspace path structure
+function findStandaloneDir() {
+  const standaloneBase = join(rootDir, '.next/standalone')
+  
+  if (!existsSync(standaloneBase)) {
+    throw new Error('Standalone build not found. Run `next build` first.')
+  }
+  
+  // Walk the directory tree to find server.js
+  function findServerJs(dir) {
+    const entries = readdirSync(dir, { withFileTypes: true })
+    
+    for (const entry of entries) {
+      const fullPath = join(dir, entry.name)
+      
+      if (entry.isFile() && entry.name === 'server.js') {
+        return dirname(fullPath)
+      }
+      
+      if (entry.isDirectory() && entry.name !== 'node_modules') {
+        const found = findServerJs(fullPath)
+        if (found) return found
+      }
+    }
+    
+    return null
+  }
+  
+  const found = findServerJs(standaloneBase)
+  if (!found) {
+    throw new Error('Could not find server.js in standalone build')
+  }
+  
+  return found
+}
+
+const standaloneDir = findStandaloneDir()
 
 console.log('📦 Preparing package for publish...')
+console.log(`   Standalone dir: ${standaloneDir}`)
 
 // Clean dist directory
 try {

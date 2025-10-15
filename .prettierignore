@@ -5,3 +5,8 @@ dist
 coverage
 CHANGELOG*.md
 .changeset
+.next
+.source
+out
+build
+public/

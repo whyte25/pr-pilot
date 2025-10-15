@@ -15,7 +15,7 @@
     "build:bin": "tsc bin/pr-pilot-ui.ts --outDir bin/dist --module Node16 --moduleResolution node16 --target ESNext --esModuleInterop --skipLibCheck && chmod +x bin/dist/pr-pilot-ui.js",
     "build:prepare": "node scripts/prepare-publish.js",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint --ignore-pattern 'dist/**' --ignore-pattern '.next/**'"
   },
   "dependencies": {
     "@floating-ui/dom": "^1.7.4",

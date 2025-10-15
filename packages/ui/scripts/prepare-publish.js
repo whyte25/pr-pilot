@@ -19,36 +19,36 @@ const distDir = join(rootDir, 'dist')
 // Next.js creates it with the full workspace path structure
 function findStandaloneDir() {
   const standaloneBase = join(rootDir, '.next/standalone')
-  
+
   if (!existsSync(standaloneBase)) {
     throw new Error('Standalone build not found. Run `next build` first.')
   }
-  
+
   // Walk the directory tree to find server.js
   function findServerJs(dir) {
     const entries = readdirSync(dir, { withFileTypes: true })
-    
+
     for (const entry of entries) {
       const fullPath = join(dir, entry.name)
-      
+
       if (entry.isFile() && entry.name === 'server.js') {
         return dirname(fullPath)
       }
-      
+
       if (entry.isDirectory() && entry.name !== 'node_modules') {
         const found = findServerJs(fullPath)
         if (found) return found
       }
     }
-    
+
     return null
   }
-  
+
   const found = findServerJs(standaloneBase)
   if (!found) {
     throw new Error('Could not find server.js in standalone build')
   }
-  
+
   return found
 }
 
@@ -73,13 +73,13 @@ cpSync(standaloneDir, join(distDir, 'standalone'), {
     // Exclude source maps and other unnecessary files
     if (src.endsWith('.map')) return false
     return true
-  }
+  },
 })
 
 // Copy static files
 console.log('   Copying static assets...')
 cpSync(join(rootDir, '.next/static'), join(distDir, 'standalone/.next/static'), {
-  recursive: true
+  recursive: true,
 })
 
 // Copy public files (if exists)
@@ -87,7 +87,7 @@ const publicDir = join(rootDir, 'public')
 try {
   console.log('   Copying public assets...')
   cpSync(publicDir, join(distDir, 'standalone/public'), {
-    recursive: true
+    recursive: true,
   })
 } catch (err) {
   if (err.code !== 'ENOENT') throw err
@@ -97,7 +97,7 @@ try {
 // Copy bin
 console.log('   Copying bin...')
 cpSync(join(rootDir, 'bin/dist'), join(distDir, 'bin'), {
-  recursive: true
+  recursive: true,
 })
 
 console.log('✅ Package prepared successfully!')

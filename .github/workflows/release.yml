@@ -53,3 +53,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Enable auto-merge for version PR
+        if: steps.changesets.outputs.pullRequestNumber != ''
+        run: |
+          echo "Version PR created: #${{ steps.changesets.outputs.pullRequestNumber }}"
+          echo "Enabling auto-merge..."
+          gh pr merge ${{ steps.changesets.outputs.pullRequestNumber }} --auto --merge
+          echo "✅ Auto-merge enabled! PR will merge automatically when checks pass."
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

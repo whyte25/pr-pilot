@@ -20,9 +20,6 @@ export async function createCommit(cwd: string, options: CreateCommitOptions) {
     }
   }
 
-  // Stage all changes
-  await git.add('.')
-
   // Build commit message
   let commitMessage = message
 
@@ -37,20 +34,18 @@ export async function createCommit(cwd: string, options: CreateCommitOptions) {
     }
   }
 
-  // Create commit
-  await git.commit(commitMessage)
-
-  // Get commit hash
-  const log = await git.log({ maxCount: 1 })
-  const commit = log.latest
+  // Build commands to execute
+  const commands = ['git add .', `git commit -m "${commitMessage.replace(/"/g, '\\"')}"`]
 
   return {
     success: true,
-    commit: {
-      hash: commit?.hash,
-      message: commitMessage,
-      author: commit?.author_name,
-      date: commit?.date,
-    },
+    changedFiles: status.files.length,
+    commitMessage,
+    commands,
+    message: `Ready to commit ${status.files.length} file(s). Run the commands below to create the commit.`,
+    files: status.files.map((f) => ({
+      path: f.path,
+      status: f.working_dir,
+    })),
   }
 }

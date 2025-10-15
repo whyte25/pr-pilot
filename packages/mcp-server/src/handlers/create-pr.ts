@@ -51,6 +51,8 @@ export async function createPR(cwd: string, options: CreatePROptions) {
   }
 
   // Build commands to execute
+  // Use single quotes to avoid shell injection vulnerabilities
+  const escapeShell = (str: string) => `'${str.replace(/'/g, "'\\''")}'`
   const commands = []
 
   if (needsPush) {
@@ -58,10 +60,10 @@ export async function createPR(cwd: string, options: CreatePROptions) {
   }
 
   // Build gh pr create command
-  const args = ['gh', 'pr', 'create', '--title', `"${title}"`]
+  const args = ['gh', 'pr', 'create', '--title', escapeShell(title)]
 
   if (body) {
-    args.push('--body', `"${body}"`)
+    args.push('--body', escapeShell(body))
   }
 
   if (base) {

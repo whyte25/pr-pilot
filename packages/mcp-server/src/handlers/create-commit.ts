@@ -35,7 +35,9 @@ export async function createCommit(cwd: string, options: CreateCommitOptions) {
   }
 
   // Build commands to execute
-  const commands = ['git add .', `git commit -m "${commitMessage.replace(/"/g, '\\"')}"`]
+  // Use single quotes to avoid shell injection vulnerabilities
+  const escapeShell = (str: string) => `'${str.replace(/'/g, "'\\''")}'`
+  const commands = ['git add .', `git commit -m ${escapeShell(commitMessage)}`]
 
   return {
     success: true,

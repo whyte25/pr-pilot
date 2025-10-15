@@ -95,11 +95,15 @@ console.log(`\n✈️  PR Pilot UI`)
 console.log(`   Starting server...`)
 
 // Set up environment
+// IMPORTANT: Pass the user's working directory to the server
+// so it can access their git repository
 const env = {
   ...process.env,
   HOSTNAME: host,
   PORT: String(port),
   NODE_ENV: 'production' as const,
+  // Store the directory where the user ran the command
+  PR_PILOT_CWD: process.cwd(),
 }
 
 // Spawn the standalone Next.js server

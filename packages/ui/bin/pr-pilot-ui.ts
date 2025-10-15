@@ -32,10 +32,18 @@ for (let i = 0; i < args.length; i++) {
   if (arg === '-h' || arg === '--help') {
     showHelp = true
   } else if (arg === '-p' || arg === '--port') {
+    if (i + 1 >= args.length) {
+      console.error('❌ Missing value for --port flag')
+      process.exit(1)
+    }
     port = parseInt(args[++i], 10)
   } else if (arg.startsWith('--port=')) {
     port = parseInt(arg.split('=')[1], 10)
   } else if (arg === '-b' || arg === '--bind') {
+    if (i + 1 >= args.length) {
+      console.error('❌ Missing value for --bind flag')
+      process.exit(1)
+    }
     host = args[++i]
   } else if (arg.startsWith('--bind=')) {
     host = arg.split('=')[1]

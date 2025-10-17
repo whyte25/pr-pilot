@@ -6,9 +6,14 @@ on:
   pull_request:
     branches: [main, develop]
 
+# Prevent duplicate runs for the same branch or PR
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   lint:
-    name: Lint
+    name: ci-lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -34,7 +39,7 @@ jobs:
         run: pnpm run format
 
   type-check:
-    name: Type Check
+    name: ci-type-check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -53,11 +58,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # Uncomment when ready to enable type checks
       # - name: Type check
       #   run: pnpm run typecheck
 
   build:
-    name: Build
+    name: ci-build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -76,7 +82,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build
+      - name: Build project
         run: pnpm run build
 
       - name: Upload build artifacts
@@ -86,7 +92,7 @@ jobs:
           path: dist/
 
   commitlint:
-    name: Commit Lint
+    name: ci-commitlint
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
     steps:

@@ -2,10 +2,7 @@ name: Release
 
 on:
   push:
-    branches:
-      - main
-
-concurrency: ${{ github.workflow }}-${{ github.ref }}
+    branches: [main]
 
 permissions:
   contents: write
@@ -13,9 +10,14 @@ permissions:
   packages: write
   id-token: write
 
+# Prevent multiple concurrent releases
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   release:
-    name: Release
+    name: ci-release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -38,7 +40,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build
+      - name: Build project
         run: pnpm run build
 
       - name: Create Release Pull Request or Publish
